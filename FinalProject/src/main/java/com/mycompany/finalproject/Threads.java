@@ -5,18 +5,18 @@
 package com.mycompany.finalproject;
 
 import eu.hansolo.tilesfx.Tile;
-import eu.hansolo.tilesfx.TileBuilder;
-import java.io.IOException;
 import javafx.application.Platform;
+import java.io.IOException;
 
 /**
  *
  * @author Mark Agluba
  */
 public class Threads {
+    private ProcessCodes process = new ProcessCodes();
     private static boolean running = true;
     
-    public void startDHTThread() {
+    public void startDHTThread(Tile humidTile, Tile tempTile) {
         Thread dhtThread = new Thread(()-> {
             while (running) {
                 try {
@@ -29,10 +29,15 @@ public class Threads {
                 
                 //update the active node
                 Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                
-                }
+                    @Override
+                    public void run() {
+                        try {
+                            process.runDht(humidTile, tempTile);
+                        }
+                        catch(IOException e) {
+                            System.err.println("Some is wrong in the DHT Thread");
+                        }
+                    }
                 });
             
             }
