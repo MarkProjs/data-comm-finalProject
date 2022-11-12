@@ -23,7 +23,7 @@ public class MyMqtt {
     // create an MQTT client
     final Mqtt5BlockingClient client = MqttClient.builder()
                                         .useMqttVersion5()
-                                        .serverHost(host)
+                                        .serverHost(this.host)
                                         .serverPort(8883)
                                         .sslWithDefaultConfig()
                                         .buildBlocking();
