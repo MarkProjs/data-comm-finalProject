@@ -4,6 +4,11 @@
  */
 package com.mycompany.finalproject;
 
+import eu.hansolo.tilesfx.Tile;
+import eu.hansolo.tilesfx.TileBuilder;
+import java.io.IOException;
+import javafx.application.Platform;
+
 /**
  *
  * @author Mark Agluba
@@ -12,8 +17,25 @@ public class Threads {
     private static boolean running = true;
     
     public void startDHTThread() {
-        Thread dhtThread = new Thread(()->{
-        
+        Thread dhtThread = new Thread(()-> {
+            while (running) {
+                try {
+                    //Delay thread for 2 seconds
+                    Thread.sleep(2000);
+                    
+                } catch(InterruptedException e) {
+                    System.err.println("DHT thread got interrupted. ");
+                }
+                
+                //update the active node
+                Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                
+                }
+                });
+            
+            }
         
         });
         
@@ -21,8 +43,8 @@ public class Threads {
     }
     
     public void startDoorBellThread() {
-        Thread doorBellThread = new Thread(()->{
-        
+        Thread doorBellThread = new Thread(()-> {
+            
         
         });
         
@@ -31,7 +53,7 @@ public class Threads {
     }
     
     public void startSenseLEDThread() {
-        Thread senseLEDThread = new Thread(()->{
+        Thread senseLEDThread = new Thread(()-> {
         
         
         });

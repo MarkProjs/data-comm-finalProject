@@ -6,6 +6,7 @@
 package com.mycompany.finalproject;
 
 import java.util.Scanner;
+import java.io.IOException;
 
 
 public class FinalProject {
