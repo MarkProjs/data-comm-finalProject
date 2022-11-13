@@ -13,6 +13,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 
 import static com.hivemq.client.mqtt.MqttGlobalPublishFilter.ALL;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.Scanner;
 
 
 public class MyMqtt {
@@ -31,6 +32,36 @@ public class MyMqtt {
     public MyMqtt(String userName,String passWord){
         this.userName = userName;
         this.passWord = passWord;
+    }
+    
+    public MyMqtt connectMqtt(){
+       Scanner reader = new Scanner(System.in);
+       boolean isTrue = true;
+       String userName = "";
+       String passWord = "";
+       while(isTrue) {
+           System.out.println("Enter your mqtt username: ");
+           userName = reader.nextLine();
+           System.out.println("Enter your mqtt password: ");
+           passWord = reader.nextLine();
+           try {
+               if(userName.length() > 30) {
+                   throw new IllegalArgumentException();
+               }
+               if(passWord.length() < 8 || passWord.length() > 30) {
+                   throw new IllegalArgumentException();
+               }
+               
+               isTrue = false;
+            }
+           catch(Exception e) {
+               System.out.println("There was an error when trying log in. Try again");
+               isTrue = true;
+           }
+        }
+       
+       MyMqtt mqtt = new MyMqtt(userName, passWord);
+       return mqtt;
     }
     
     public void connectClient() {
