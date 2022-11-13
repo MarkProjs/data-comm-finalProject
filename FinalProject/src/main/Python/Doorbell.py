@@ -7,8 +7,8 @@
 ########################################################################
 import RPi.GPIO as GPIO
 
-buzzerPin = 11    # define buzzerPin
-buttonPin = 12    # define buttonPin
+buzzerPin = 11    # define buzzerPin-->To be changed
+buttonPin = 12    # define buttonPin--> To be changed
 
 GPIO.setmode(GPIO.BOARD)        # use PHYSICAL GPIO Numbering
 GPIO.setup(buzzerPin, GPIO.OUT)   # set buzzerPin to OUTPUT mode
@@ -21,6 +21,5 @@ if GPIO.input(buttonPin)==GPIO.LOW: # if button is pressed
 else : # if button is relessed
     GPIO.output(buzzerPin,GPIO.LOW) # turn off buzzer
     print ('buzzer turned off <<<')
-
 
 GPIO.cleanup()

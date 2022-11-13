@@ -39,7 +39,6 @@ public class Threads {
                         }
                     }
                 });
-            
             }
         
         });
@@ -47,9 +46,30 @@ public class Threads {
         dhtThread.start();
     }
     
-    public void startDoorBellThread() {
+    public void startDoorBellThread(Tile doorBellTile) {
         Thread doorBellThread = new Thread(()-> {
-            
+            while(running) {
+                try {
+                    //Delay thread for 2 seconds
+                    Thread.sleep(2000);
+                    
+                } catch(InterruptedException e) {
+                    System.err.println("DoorBell thread got interrupted. ");
+                }
+                
+                //update the active node
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            process.runDoorBell(doorBellTile);
+                        }
+                        catch(IOException e) {
+                            System.err.println("Some is wrong in the Doorbell Thread");
+                        }
+                    }               
+                });
+            }
         
         });
         
@@ -57,10 +77,30 @@ public class Threads {
     
     }
     
-    public void startSenseLEDThread() {
+    public void startSenseLEDThread(Tile sensorTile) {
         Thread senseLEDThread = new Thread(()-> {
-        
-        
+            while(running) {
+                try{
+                    //Delay thread for 2 seconds
+                    Thread.sleep(2000);
+            
+                }catch(InterruptedException e) {
+                    System.err.println("SenseLED thread got interrupted. ");
+                }
+                
+                //update the active node
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            process.runSensor(sensorTile);
+                        }
+                        catch(IOException e){
+                            System.err.println("Some is wrong in the SenseLED Thread");
+                        }
+                    }
+                });
+            }
         });
         
         senseLEDThread.start();
