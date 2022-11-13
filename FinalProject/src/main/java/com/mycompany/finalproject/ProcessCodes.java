@@ -18,4 +18,8 @@ public class ProcessCodes {
         humidTile.setValue(Double.parseDouble(splitOutput[0]));
         tempTile.setValue(Double.parseDouble(splitOutput[1]));
     }
+    
+    public void runDoorBell(Tile doorBellTile) {
+    
+    }
 }
