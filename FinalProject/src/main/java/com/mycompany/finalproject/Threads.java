@@ -14,6 +14,8 @@ import java.io.IOException;
  */
 public class Threads {
     private ProcessCodes process = new ProcessCodes();
+    
+    //Flag to monitor the threads
     private static boolean running = true;
     
     public void startDHTThread(Tile humidTile, Tile tempTile) {
