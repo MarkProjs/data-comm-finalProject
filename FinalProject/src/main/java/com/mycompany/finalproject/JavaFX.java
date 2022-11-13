@@ -39,6 +39,51 @@ public class JavaFX extends HBox {
     }
     
     private void buildScreen() throws IOException {
+        //create the doorBell Tile
+        //Generate a timestamp
+        var timeStamp2 = new Date();
+        doorBellTile = TileBuilder.create()
+                        .skinType(Tile.SkinType.TEXT)
+                        .prefSize(350, 300)
+                        .textSize(Tile.TextSize.BIGGER)
+                        .title("Output from external program to Text Tile")
+                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .descriptionAlignment(Pos.CENTER_LEFT)
+                        .textVisible(true)
+                        .build();
+        
+        //create sensor tile
+        sensorTile = TileBuilder.create()
+                        .skinType(Tile.SkinType.TEXT)
+                        .prefSize(350, 300)
+                        .textSize(Tile.TextSize.BIGGER)
+                        .title("Output from external program to Text Tile")
+                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .descriptionAlignment(Pos.CENTER_LEFT)
+                        .textVisible(true)
+                        .build();
+        
+        
+        
+        //create tempTile
+        tempTile = TileBuilder.create()
+                              .skinType(Tile.SkinType.GAUGE)
+                              .prefSize(350, 300)
+                              .title("Temperature Tile")
+                              .unit("C")
+                              .threshold(75)
+                              .build();
+        
+        
+        //Create humidTile
+        humidTile = TileBuilder.create()
+                               .skinType(Tile.SkinType.PERCENTAGE)
+                               .prefSize(350, 300)
+                               .title("Humidity Tile")
+                               .unit("g.m-3")
+                               .maxValue(60)
+                               .build();
+        
         //setup the update button
         var updateButton = new Button("Update");
         updateButton.setOnAction(e-> {
@@ -80,7 +125,10 @@ public class JavaFX extends HBox {
                 .roundedCorners(false)
                 .build();
        
+       
+       var column1 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
        //adding to the main screen
+       this.getChildren().add(column1);
        this.getChildren().addAll(updateTile, exitTile);
        this.setSpacing(5);
        

@@ -23,7 +23,7 @@ public class Threads {
             while (running) {
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                     
                 } catch(InterruptedException e) {
                     System.err.println("DHT thread got interrupted. ");
@@ -53,7 +53,7 @@ public class Threads {
             while(running) {
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                     
                 } catch(InterruptedException e) {
                     System.err.println("DoorBell thread got interrupted. ");
@@ -84,7 +84,7 @@ public class Threads {
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
             
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
