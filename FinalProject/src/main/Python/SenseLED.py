@@ -8,7 +8,7 @@
 import RPi.GPIO as GPIO
 
 ledPin = 12       # define ledPin--> to be changed
-sensorPin = 11    # define sensorPin--> to be changed
+sensorPin = 13    # define sensorPin--> to be changed
 
 GPIO.setmode(GPIO.BOARD)        # use PHYSICAL GPIO Numbering
 GPIO.setup(ledPin, GPIO.OUT)    # set ledPin to OUTPUT mode
