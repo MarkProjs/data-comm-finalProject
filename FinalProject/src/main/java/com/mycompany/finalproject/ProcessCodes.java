@@ -28,9 +28,7 @@ public class ProcessCodes {
         
         String output = processBuilder.startProcess();
         
-        doorBellTile = TileBuilder.create()
-                                  .text(output)
-                                  .build();
+        doorBellTile.setText(output);
         
     }
     
@@ -41,8 +39,6 @@ public class ProcessCodes {
         
         String output = processBuilder.startProcess();
         
-        sensorTile = TileBuilder.create()
-                                .text(output)
-                                .build();
+        sensorTile.setText(output);
     }
 }

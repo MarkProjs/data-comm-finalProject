@@ -8,7 +8,7 @@
 import RPi.GPIO as GPIO
 
 buzzerPin = 11    # define buzzerPin-->To be changed
-buttonPin = 12    # define buttonPin--> To be changed
+buttonPin = 40    # define buttonPin--> To be changed
 
 GPIO.setmode(GPIO.BOARD)        # use PHYSICAL GPIO Numbering
 GPIO.setup(buzzerPin, GPIO.OUT)   # set buzzerPin to OUTPUT mode

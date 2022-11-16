@@ -32,10 +32,13 @@ public class JavaFX extends HBox {
         threads = new Threads();
         
         //Build the screen
+        System.out.println("Before buildscreen");
         this.buildScreen();
+        System.out.println("After buildscreen");
         this.threads.startDHTThread(humidTile, tempTile);
-        this.threads.startDoorBellThread(doorBellTile);
-        this.threads.startSenseLEDThread(sensorTile);
+//        this.threads.startDoorBellThread(doorBellTile);
+//        this.threads.startSenseLEDThread(sensorTile);
+        System.out.println(" thread");
     }
     
     private void buildScreen() throws IOException {
@@ -127,9 +130,14 @@ public class JavaFX extends HBox {
        
        
        var column1 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
+       var column2 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
+       var column3 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
+       var elems = new HBox(column1, column2, column3);
+       var footer = new HBox(updateTile, exitTile);
+        VBox screen = new VBox(elems, footer);
        //adding to the main screen
-       this.getChildren().add(column1);
-       this.getChildren().addAll(updateTile, exitTile);
+       this.getChildren().add(screen);
+       
        this.setSpacing(5);
        
     }
