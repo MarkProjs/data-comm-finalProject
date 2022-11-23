@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,10 +24,22 @@ public class JavaFX extends HBox {
     //setting the tiles
     private MyMqtt mqtt;
     private Threads threads;
-    private Tile humidTile;
-    private Tile tempTile;
-    private Tile doorBellTile;
-    private Tile sensorTile;
+    private Tile markHumidTile;
+    private Tile markTempTile;
+    private Tile markDoorBellTile;
+    private Tile markSensorTile;
+    private Tile markImageTile;
+    private Tile antHumidTile;
+    private Tile antTempTile;
+    private Tile antDoorBellTile;
+    private Tile antSensorTile;
+    private Tile antImageTile;
+    private Tile jerHumidTile;
+    private Tile jerTempTile;
+    private Tile jerDoorBellTile;
+    private Tile jerSensorTile;
+    private Tile jerImageTile;
+
     
     public JavaFX() throws IOException {
         threads = new Threads();
@@ -35,7 +48,7 @@ public class JavaFX extends HBox {
         System.out.println("Before buildscreen");
         this.buildScreen();
         System.out.println("After buildscreen");
-        this.threads.startDHTThread(humidTile, tempTile);
+//        this.threads.startDHTThread(markHumidTile, markTempTile);
 //        this.threads.startDoorBellThread(doorBellTile);
 //        this.threads.startSenseLEDThread(sensorTile);
         System.out.println(" thread");
@@ -45,7 +58,7 @@ public class JavaFX extends HBox {
         //create the doorBell Tile
         //Generate a timestamp
         var timeStamp2 = new Date();
-        doorBellTile = TileBuilder.create()
+        markDoorBellTile = TileBuilder.create()
                         .skinType(Tile.SkinType.TEXT)
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
@@ -56,7 +69,7 @@ public class JavaFX extends HBox {
                         .build();
         
         //create sensor tile
-        sensorTile = TileBuilder.create()
+        markSensorTile = TileBuilder.create()
                         .skinType(Tile.SkinType.TEXT)
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
@@ -69,17 +82,17 @@ public class JavaFX extends HBox {
         
         
         //create tempTile
-        tempTile = TileBuilder.create()
+        markTempTile = TileBuilder.create()
                               .skinType(Tile.SkinType.GAUGE)
                               .prefSize(350, 300)
                               .title("Temperature Tile")
                               .unit("C")
                               .threshold(75)
                               .build();
-        
+     
         
         //Create humidTile
-        humidTile = TileBuilder.create()
+        markHumidTile = TileBuilder.create()
                                .skinType(Tile.SkinType.PERCENTAGE)
                                .prefSize(350, 300)
                                .title("Humidity Tile")
@@ -87,31 +100,14 @@ public class JavaFX extends HBox {
                                .maxValue(60)
                                .build();
         
-        //setup the update button
-        var updateButton = new Button("Update");
-        updateButton.setOnAction(e-> {
-            var updateDataObj = new UpdateData();
-            try {
-                updateDataObj.updateOutput();
-            } catch(IOException ex) {
-                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        //Generate a timestamp
-        var timeStamp = new Date();
-        //tile for the update button
-        var updateTile = TileBuilder.create()
-                .skinType(Tile.SkinType.CUSTOM)
-                .prefSize(350, 300)
-                .title("Update the output")
-                .textSize(Tile.TextSize.BIGGER)
-                .text("Last update date and time: " + timeStamp)
-                .textColor(Color.MIDNIGHTBLUE)
-                .backgroundColor(Color.LIGHTBLUE)
-                .titleColor(Color.BLUE)
-                .graphic(updateButton)
-                .roundedCorners(true)
-                .build();
+        //setup the image tile
+        markImageTile = TileBuilder.create()
+                            .skinType(Tile.SkinType.IMAGE)
+                            .prefSize(150, 150)
+                            .title("Mark's Image Tile")
+                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
+                            .imageMask(Tile.ImageMask.RECTANGULAR)
+                            .build();
         
         
        //Setup the Exit button
@@ -129,14 +125,13 @@ public class JavaFX extends HBox {
                 .build();
        
        
-       var column1 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
-       var column2 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
-       var column3 = new VBox(humidTile, tempTile, sensorTile, doorBellTile);
+       var column1 = new VBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
+       var column2 = new VBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
+       var column3 = new VBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
        var elems = new HBox(column1, column2, column3);
-       var footer = new HBox(updateTile, exitTile);
-        VBox screen = new VBox(elems, footer);
+  
        //adding to the main screen
-       this.getChildren().add(screen);
+       this.getChildren().add(elems);
        
        this.setSpacing(5);
        
