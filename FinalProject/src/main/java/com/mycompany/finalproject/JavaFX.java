@@ -68,8 +68,48 @@ public class JavaFX extends HBox {
                         .textVisible(true)
                         .build();
         
+        antDoorBellTile = TileBuilder.create()
+                        .skinType(Tile.SkinType.TEXT)
+                        .prefSize(350, 300)
+                        .textSize(Tile.TextSize.BIGGER)
+                        .title("Output from external program to Text Tile")
+                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .descriptionAlignment(Pos.CENTER_LEFT)
+                        .textVisible(true)
+                        .build();
+        
+        jerDoorBellTile = TileBuilder.create()
+                        .skinType(Tile.SkinType.TEXT)
+                        .prefSize(350, 300)
+                        .textSize(Tile.TextSize.BIGGER)
+                        .title("Output from external program to Text Tile")
+                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .descriptionAlignment(Pos.CENTER_LEFT)
+                        .textVisible(true)
+                        .build();
+        
         //create sensor tile
         markSensorTile = TileBuilder.create()
+                        .skinType(Tile.SkinType.TEXT)
+                        .prefSize(350, 300)
+                        .textSize(Tile.TextSize.BIGGER)
+                        .title("Output from external program to Text Tile")
+                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .descriptionAlignment(Pos.CENTER_LEFT)
+                        .textVisible(true)
+                        .build();
+        
+        antSensorTile = TileBuilder.create()
+                        .skinType(Tile.SkinType.TEXT)
+                        .prefSize(350, 300)
+                        .textSize(Tile.TextSize.BIGGER)
+                        .title("Output from external program to Text Tile")
+                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .descriptionAlignment(Pos.CENTER_LEFT)
+                        .textVisible(true)
+                        .build();
+        
+        jerSensorTile = TileBuilder.create()
                         .skinType(Tile.SkinType.TEXT)
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
@@ -89,6 +129,22 @@ public class JavaFX extends HBox {
                               .unit("C")
                               .threshold(75)
                               .build();
+        
+        antTempTile = TileBuilder.create()
+                              .skinType(Tile.SkinType.GAUGE)
+                              .prefSize(350, 300)
+                              .title("Temperature Tile")
+                              .unit("C")
+                              .threshold(75)
+                              .build();
+        
+        jerTempTile = TileBuilder.create()
+                              .skinType(Tile.SkinType.GAUGE)
+                              .prefSize(350, 300)
+                              .title("Temperature Tile")
+                              .unit("C")
+                              .threshold(75)
+                              .build();
      
         
         //Create humidTile
@@ -100,8 +156,40 @@ public class JavaFX extends HBox {
                                .maxValue(60)
                                .build();
         
+        antHumidTile = TileBuilder.create()
+                               .skinType(Tile.SkinType.PERCENTAGE)
+                               .prefSize(350, 300)
+                               .title("Humidity Tile")
+                               .unit("g.m-3")
+                               .maxValue(60)
+                               .build();
+        
+        jerHumidTile = TileBuilder.create()
+                               .skinType(Tile.SkinType.PERCENTAGE)
+                               .prefSize(350, 300)
+                               .title("Humidity Tile")
+                               .unit("g.m-3")
+                               .maxValue(60)
+                               .build();
+        
         //setup the image tile
         markImageTile = TileBuilder.create()
+                            .skinType(Tile.SkinType.IMAGE)
+                            .prefSize(150, 150)
+                            .title("Mark's Image Tile")
+                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
+                            .imageMask(Tile.ImageMask.RECTANGULAR)
+                            .build();
+        
+        antImageTile = TileBuilder.create()
+                            .skinType(Tile.SkinType.IMAGE)
+                            .prefSize(150, 150)
+                            .title("Mark's Image Tile")
+                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
+                            .imageMask(Tile.ImageMask.RECTANGULAR)
+                            .build();
+        
+        jerImageTile = TileBuilder.create()
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(150, 150)
                             .title("Mark's Image Tile")
