@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 //Heleper class to update the tiles
 public class UpdateData {
     public void updateOutput() throws IOException {
-        var updatedScene = new Scene(new JavaFX(), 1060, 1500);
+        var updatedScene = new Scene(new JavaFX(), 1750, 1500);
         FinalProject.theStage.setScene(updatedScene);
         FinalProject.theStage.show();
     }
