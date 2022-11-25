@@ -65,16 +65,8 @@ public class Threads {
                     @Override
                     public void run() {
                         try{
-                            String tileText = "";
-                            String doorBellOutput = process.runDoorBell();
-                            if(doorBellOutput.equals("buzzer turned on")) {
-                                var timeStamp2 = new Date();
-                                tileText = "buzzer turned on at" + "\n"+ timeStamp2;
-                            }
-                            else {
-                                tileText = "buzzer is off";
-                            }
-                            doorBellTile.setText(tileText);
+                            process.runDoorBell(doorBellTile);
+                            
                         }
                         catch(IOException e) {
                             System.err.println("Some is wrong in the Doorbell Thread");

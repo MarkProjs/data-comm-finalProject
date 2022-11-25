@@ -50,13 +50,13 @@ public class JavaFX extends HBox {
         threads = new Threads();
         
         //Build the screen
-        System.out.println("Before buildscreen");
+     
         this.buildScreen();
-        System.out.println("After buildscreen");
+
         this.threads.startDHTThread(markHumidTile, markTempTile);
         this.threads.startDoorBellThread(markDoorBellTile);
 //        this.threads.startSenseLEDThread(sensorTile);
-        System.out.println(" thread");
+ 
     }
     
     private void buildScreen() throws IOException {
@@ -71,7 +71,6 @@ public class JavaFX extends HBox {
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();
-        markDoorBellTile.setText("Buzzer turned off");
         
         antDoorBellTile = TileBuilder.create()
                         .skinType(Tile.SkinType.TEXT)

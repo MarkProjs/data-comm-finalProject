@@ -5,8 +5,8 @@
 package com.mycompany.finalproject;
 
 import eu.hansolo.tilesfx.Tile;
-import eu.hansolo.tilesfx.TileBuilder;
 import java.io.IOException;
+import java.util.Date;
 
 public class ProcessCodes {
     //execute the python code for DHT11
@@ -22,13 +22,23 @@ public class ProcessCodes {
     }
     
     //execute the python code for Doorbell
-    public String runDoorBell() throws IOException{
+    public void runDoorBell(Tile doorBellTile) throws IOException{
         String doorBellCode = "src/main/Python/Doorbell.py";
         var processBuilder = new ProcessBuilderEx(doorBellCode);
         
         String output = processBuilder.startProcess();
         
-        return output;
+        String tileText = "";
+        
+        if(output.equals("buzzer turned on")) {
+           var timeStamp2 = new Date();
+           tileText = "buzzer turned on at " + timeStamp2.toString();
+        }
+        else if (output.equals("buzzer turned off")){
+            tileText = "buzzer is off";
+            
+        }
+        doorBellTile.setText(tileText);
         
     }
     
