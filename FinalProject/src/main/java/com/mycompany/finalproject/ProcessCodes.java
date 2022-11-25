@@ -5,8 +5,8 @@
 package com.mycompany.finalproject;
 
 import eu.hansolo.tilesfx.Tile;
-import eu.hansolo.tilesfx.TileBuilder;
 import java.io.IOException;
+import java.util.Date;
 
 public class ProcessCodes {
     //execute the python code for DHT11
@@ -28,17 +28,27 @@ public class ProcessCodes {
         
         String output = processBuilder.startProcess();
         
-        doorBellTile.setText(output);
+        String tileText = "";
+        
+        if(output.equals("buzzer turned on")) {
+           var timeStamp2 = new Date();
+           tileText = "buzzer turned on at " + timeStamp2.toString();
+        }
+        else if (output.equals("buzzer turned off")){
+            tileText = "buzzer is off";
+            
+        }
+        doorBellTile.setText(tileText);
         
     }
     
     //execute the python code for the Sensor
-    public void runSensor(Tile sensorTile) throws IOException {
+    public String runSensor() throws IOException {
         String sensorCode = "src/main/Python/SenseLED.py";
         var processBuilder = new ProcessBuilderEx(sensorCode);
         
         String output = processBuilder.startProcess();
         
-        sensorTile.setText(output);
+        return output;
     }
 }

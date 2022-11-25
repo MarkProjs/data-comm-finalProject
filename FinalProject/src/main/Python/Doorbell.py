@@ -16,19 +16,17 @@ def setup():
     GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)    # set buttonPin to PULL UP INPUT mode
 
 def loop():
-    while True:
-        if GPIO.input(buttonPin)==GPIO.LOW: # if button is pressed
-            GPIO.output(buzzerPin,GPIO.HIGH) # turn on buzzer
-            print ('buzzer turned on >>>')
-        else : # if button is relessed
-            GPIO.output(buzzerPin,GPIO.LOW) # turn off buzzer
-            print ('buzzer turned off <<<')
+    if GPIO.input(buttonPin)==GPIO.LOW: # if button is pressed
+        GPIO.output(buzzerPin,GPIO.HIGH) # turn on buzzer
+        print ('buzzer turned on')
+    else : # if button is relessed
+        GPIO.output(buzzerPin,GPIO.LOW) # turn off buzzer
+        print ('buzzer turned off')
 
 def destroy():
     GPIO.cleanup()                     # Release all GPIO
 
 if __name__ == '__main__':     # Program entrance
-    print ('Program is starting...')
     setup()
     try:
         loop()
