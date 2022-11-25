@@ -27,7 +27,6 @@ def destroy():
     GPIO.cleanup()                     # Release GPIO resource
 
 if __name__ == '__main__':     # Program entrance
-    print ('Program is starting...')
     setup()
     try:
         loop()

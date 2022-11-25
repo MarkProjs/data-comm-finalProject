@@ -43,12 +43,22 @@ public class ProcessCodes {
     }
     
     //execute the python code for the Sensor
-    public String runSensor() throws IOException {
+    public void runSensor(Tile senseTile) throws IOException {
         String sensorCode = "src/main/Python/SenseLED.py";
         var processBuilder = new ProcessBuilderEx(sensorCode);
         
         String output = processBuilder.startProcess();
         
-        return output;
+        String tileText = "";
+        
+        if(output.equals("led turned on")) {
+           var timeStamp2 = new Date();
+           tileText = "led turned on at " + timeStamp2.toString();
+        }
+        else if (output.equals("led turned off")){
+            tileText = "led is off";
+            
+        }
+        senseTile.setText(tileText);
     }
 }
