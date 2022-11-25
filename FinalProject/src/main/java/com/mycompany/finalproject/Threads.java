@@ -7,6 +7,7 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import javafx.application.Platform;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  *
@@ -64,12 +65,21 @@ public class Threads {
                     @Override
                     public void run() {
                         try{
-                            process.runDoorBell(doorBellTile);
+                            String tileText = "";
+                            String doorBellOutput = process.runDoorBell();
+                            if(doorBellOutput.equals("buzzer turned on")) {
+                                var timeStamp2 = new Date();
+                                tileText = "buzzer turned on at" + "\n"+ timeStamp2;
+                            }
+                            else {
+                                tileText = "buzzer is off";
+                            }
+                            doorBellTile.setText(tileText);
                         }
                         catch(IOException e) {
                             System.err.println("Some is wrong in the Doorbell Thread");
                         }
-                    }               
+                    }            
                 });
             }
         
@@ -95,7 +105,8 @@ public class Threads {
                     @Override
                     public void run() {
                         try{
-                            process.runSensor(sensorTile);
+                            process.runSensor();
+                            sensorTile.setText("");
                         }
                         catch(IOException e){
                             System.err.println("Some is wrong in the SenseLED Thread");

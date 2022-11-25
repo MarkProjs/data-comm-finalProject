@@ -53,8 +53,8 @@ public class JavaFX extends HBox {
         System.out.println("Before buildscreen");
         this.buildScreen();
         System.out.println("After buildscreen");
-//        this.threads.startDHTThread(markHumidTile, markTempTile);
-//        this.threads.startDoorBellThread(doorBellTile);
+        this.threads.startDHTThread(markHumidTile, markTempTile);
+        this.threads.startDoorBellThread(markDoorBellTile);
 //        this.threads.startSenseLEDThread(sensorTile);
         System.out.println(" thread");
     }
@@ -62,23 +62,23 @@ public class JavaFX extends HBox {
     private void buildScreen() throws IOException {
         //create the doorBell Tile
         //Generate a timestamp
-        var timeStamp2 = new Date();
         markDoorBellTile = TileBuilder.create()
                         .skinType(Tile.SkinType.TEXT)
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
                         .title("Mark's doorbell tile")
-                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .description("Output from external program")
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();
+        markDoorBellTile.setText("Buzzer turned off");
         
         antDoorBellTile = TileBuilder.create()
                         .skinType(Tile.SkinType.TEXT)
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
                         .title("Antonio's doorbell tile")
-                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .description("Output from external program")
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();
@@ -88,7 +88,7 @@ public class JavaFX extends HBox {
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
                         .title("Jeremy's doorbell tile")
-                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .description("Output from external program")
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();
@@ -99,7 +99,7 @@ public class JavaFX extends HBox {
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
                         .title("Mark's sensor tile")
-                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .description("Output from external program")
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();
@@ -109,7 +109,7 @@ public class JavaFX extends HBox {
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
                         .title("Antonio's sensor tile")
-                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .description("Output from external program")
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();
@@ -119,7 +119,7 @@ public class JavaFX extends HBox {
                         .prefSize(350, 300)
                         .textSize(Tile.TextSize.BIGGER)
                         .title("Jeremy's Sensor tile")
-                        .description("Output from external program at" + "\n" + timeStamp2)
+                        .description("Output from external program")
                         .descriptionAlignment(Pos.CENTER_LEFT)
                         .textVisible(true)
                         .build();

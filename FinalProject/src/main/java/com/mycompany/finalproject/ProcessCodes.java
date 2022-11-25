@@ -22,23 +22,23 @@ public class ProcessCodes {
     }
     
     //execute the python code for Doorbell
-    public void runDoorBell(Tile doorBellTile) throws IOException{
+    public String runDoorBell() throws IOException{
         String doorBellCode = "src/main/Python/Doorbell.py";
         var processBuilder = new ProcessBuilderEx(doorBellCode);
         
         String output = processBuilder.startProcess();
         
-        doorBellTile.setText(output);
+        return output;
         
     }
     
     //execute the python code for the Sensor
-    public void runSensor(Tile sensorTile) throws IOException {
+    public String runSensor() throws IOException {
         String sensorCode = "src/main/Python/SenseLED.py";
         var processBuilder = new ProcessBuilderEx(sensorCode);
         
         String output = processBuilder.startProcess();
         
-        sensorTile.setText(output);
+        return output;
     }
 }
