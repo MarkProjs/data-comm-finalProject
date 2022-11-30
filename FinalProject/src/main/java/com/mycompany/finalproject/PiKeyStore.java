@@ -20,24 +20,24 @@ public class PiKeyStore{
 		}
 	}
 
-	public getPrivateKey(){
+	public getPrivateKey(String privateKeyAlias){
 		KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry)
-			ks.getEntry("privateKeyAlias", this.password);
+			ks.getEntry(privateKeyAlias, this.password);
 		PrivateKey myPrivateKey = pkEntry.getPrivateKey();
 	}  
 
-    public saveSecretKey(){
+    public saveSecretKey(String secretKeyAlias){
 		javax.crypto.SecretKey mySecretKey;
 		KeyStore.SecretKeyEntry skEntry =
 			new KeyStore.SecretKeyEntry(mySecretKey);
-		ks.setEntry("secretKeyAlias", skEntry, 
+		ks.setEntry(secretKeyAlias, skEntry, 
 			new KeyStore.PasswordProtection(this.password));
 	}
     
 	public storeKeyStore(string path){
 		java.io.FileOutputStream fos = null;
 		try {
-			fos = new java.io.FileOutputStream(path); // recommended: newKeyStoreName
+			fos = new java.io.FileOutputStream(path); // newKeyStoreName
 			ks.store(fos, password);
 		} finally {
 			if (fos != null) {
