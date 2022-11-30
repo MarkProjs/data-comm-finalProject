@@ -97,8 +97,8 @@ public class Threads {
                     @Override
                     public void run() {
                         try{
-                            process.runSensor();
-                            sensorTile.setText("");
+                            process.runSensor(sensorTile);
+                          
                         }
                         catch(IOException e){
                             System.err.println("Some is wrong in the SenseLED Thread");
