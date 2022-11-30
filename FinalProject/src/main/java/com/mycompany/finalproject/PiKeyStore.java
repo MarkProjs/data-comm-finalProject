@@ -3,7 +3,7 @@ public class PiKeyStore{
 	char[] password;
 
 	public PiKeyStore(char[] password, String path){
-		this.password = password; // need deep copy?
+		this.password = password.clone();
 		// might need null check and default value for path
 		loadKeyStore(path);
 	}
