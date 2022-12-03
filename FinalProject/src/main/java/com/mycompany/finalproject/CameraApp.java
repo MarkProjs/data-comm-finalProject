@@ -1,5 +1,5 @@
 
-package com.mycompany.camerapi4jexamplecode;
+package com.mycompany.finalproject;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
@@ -38,25 +38,10 @@ public class CameraApp implements Application {
 		.width(1280)
 		.height(800)
 		.build();
-
         //Take the picture
         camera.takeStill(config);
-
         System.out.println("waiting for camera to take pic");
         delay(4000);
-
-        System.out.println("Taking a video for 3 seconds");
-        
-        //Configure the video setup
-        var vidconfig = Camera.VidConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/Videos/")
-                .disablePreview(true)
-		.recordTime(3000)
-		.useDate(true)
-		.build();
-        
-        //Take the video
-        camera.takeVid(vidconfig); 
     }
 
     

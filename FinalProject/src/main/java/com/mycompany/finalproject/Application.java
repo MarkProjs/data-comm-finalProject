@@ -6,7 +6,7 @@
  * 
  */
 
-package com.mycompany.camerapi4jexamplecode;
+package com.mycompany.finalproject;
 
 import com.pi4j.context.Context;
 import java.util.logging.Logger;
