@@ -39,7 +39,7 @@ public class Camera extends Component{
      */
     public void takeStill() {
         takeStill(PicConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/Pictures/").build());
+                .outputPath("../../../../resources/images/").build());
     }
 
     /**

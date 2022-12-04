@@ -29,7 +29,7 @@ public class CameraApp implements Application {
         
         //Configure the camera setup
         var config = Camera.PicConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/Pictures/picTaken")
+                .outputPath("../../../../resources/images/picTaken")
 		.delay(3000)
 		.disablePreview(true)
 		.encoding(Camera.PicEncoding.PNG)
