@@ -4,6 +4,7 @@
  */
 package com.mycompany.finalproject;
 
+import com.pi4j.Pi4J;
 import eu.hansolo.tilesfx.Tile;
 import java.io.IOException;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class ProcessCodes {
     }
     
     //execute the python code for the Sensor
-    public void runSensor(Tile senseTile) throws IOException {
+    public void runSensor(Tile senseTile, Tile imageTile) throws IOException {
         String sensorCode = "src/main/Python/SenseLED.py";
         var processBuilder = new ProcessBuilderEx(sensorCode);
         
@@ -54,6 +55,14 @@ public class ProcessCodes {
         if(output.equals("led turned on")) {
            var timeStamp2 = new Date();
            tileText = "led turned on at " + timeStamp2.toString();
+            //Initialize the Pi4J Runtime Context
+            var pi4j = Pi4J.newAutoContext();
+
+            CameraApp runApp = new CameraApp();
+            runApp.execute(pi4j);
+        
+            // Shutdown Pi4J
+            pi4j.shutdown();
         }
         else if (output.equals("led turned off")){
             tileText = "led is off";

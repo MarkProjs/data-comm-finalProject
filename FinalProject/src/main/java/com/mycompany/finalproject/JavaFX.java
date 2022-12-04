@@ -55,7 +55,7 @@ public class JavaFX extends HBox {
 
         this.threads.startDHTThread(markHumidTile, markTempTile);
         this.threads.startDoorBellThread(markDoorBellTile);
-        this.threads.startSenseLEDThread(markSensorTile);
+        this.threads.startSenseLEDThread(markSensorTile, markImageTile);
  
     }
     

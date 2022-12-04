@@ -81,7 +81,7 @@ public class Threads {
     
     }
     
-    public void startSenseLEDThread(Tile sensorTile) {
+    public void startSenseLEDThread(Tile sensorTile, Tile imageTile) {
         Thread senseLEDThread = new Thread(()-> {
             while(running) {
                 try{
@@ -97,7 +97,7 @@ public class Threads {
                     @Override
                     public void run() {
                         try{
-                            process.runSensor(sensorTile);
+                            process.runSensor(sensorTile, imageTile);
                           
                         }
                         catch(IOException e){

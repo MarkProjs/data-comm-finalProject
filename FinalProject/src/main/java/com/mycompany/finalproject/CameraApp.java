@@ -43,19 +43,4 @@ public class CameraApp implements Application {
         System.out.println("waiting for camera to take pic");
         delay(4000);
     }
-
-    
-    public static void main(String[] args) {
-
-        //Initialize the Pi4J Runtime Context
-        var pi4j = Pi4J.newAutoContext();
-
-        CameraApp runApp = new CameraApp();
-        runApp.execute(pi4j);
-        
-        // Shutdown Pi4J
-        pi4j.shutdown();
-
-    }
-    
 }
