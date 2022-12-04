@@ -8,6 +8,7 @@ import com.pi4j.Pi4J;
 import eu.hansolo.tilesfx.Tile;
 import java.io.IOException;
 import java.util.Date;
+import javafx.scene.image.Image;
 
 public class ProcessCodes {
     //execute the python code for DHT11
@@ -63,6 +64,8 @@ public class ProcessCodes {
         
             // Shutdown Pi4J
             pi4j.shutdown();
+            
+            imageTile.setImage(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")));
         }
         else if (output.equals("led turned off")){
             tileText = "led is off";

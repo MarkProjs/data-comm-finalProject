@@ -29,18 +29,22 @@ public class CameraApp implements Application {
         
         //Configure the camera setup
         var config = Camera.PicConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/NetBeansProject/data-comm-final-project/FinalProject/src/main/resources/images/")
+                .outputPath("/home/markisawesome/Pictures/picTaken")
 		.delay(3000)
 		.disablePreview(true)
 		.encoding(Camera.PicEncoding.PNG)
-		.useDate(true)
+		.useDate(false)
 		.quality(93)
 		.width(1280)
 		.height(800)
 		.build();
+
         //Take the picture
         camera.takeStill(config);
+
         System.out.println("waiting for camera to take pic");
-        delay(4000);
+        delay(1000);
+                
     }
+    
 }

@@ -181,7 +181,6 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Mark's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
