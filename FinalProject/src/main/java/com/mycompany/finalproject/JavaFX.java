@@ -58,12 +58,12 @@ public class JavaFX extends HBox {
         threads = new Threads();
         
         //Build the screen
-     
-        this.buildScreen();
+        this.buildMqttPrompt();
+//        this.buildScreen();
 
-        this.threads.startDHTThread(markHumidTile, markTempTile);
-        this.threads.startDoorBellThread(markDoorBellTile);
-        this.threads.startSenseLEDThread(markSensorTile);
+//        this.threads.startDHTThread(markHumidTile, markTempTile);
+//        this.threads.startDoorBellThread(markDoorBellTile);
+//        this.threads.startSenseLEDThread(markSensorTile);
  
     }
     
@@ -99,8 +99,17 @@ public class JavaFX extends HBox {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction((e) -> {
-            actiontarget.setFill(Color.FIREBRICK);
-            actiontarget.setText("Sign in button pressed");
+            try{
+                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
+                actiontarget.setFill(Color.BLACK);
+                actiontarget.setText("Signing in...");
+                this.mqtt.connectMqtt();
+            } catch(Exception exc){
+                actiontarget.setFill(Color.FIREBRICK);
+                actiontarget.setText("Sign in failed");
+                userTextField.clear();
+                pwBox.clear();
+            }
         });
         
         this.getChildren().add(grid);
