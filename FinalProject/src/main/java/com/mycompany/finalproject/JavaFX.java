@@ -108,7 +108,7 @@ public class JavaFX extends HBox {
                 this.buildScreen();
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startDoorBellThread(markDoorBellTile);
-                this.threads.startSenseLEDThread(markSensorTile);
+                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
             } catch (Exception exc) {
                 actiontarget.setFill(Color.FIREBRICK);
                 actiontarget.setText("Sign in failed");
