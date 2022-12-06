@@ -120,6 +120,10 @@ public class JavaFX extends HBox {
         this.getChildren().add(grid);
     }
 
+    private void buildKeystorePrompt() {
+        
+    }
+
     private void buildScreen() throws IOException {
         //create the doorBell Tile
         //Generate a timestamp
