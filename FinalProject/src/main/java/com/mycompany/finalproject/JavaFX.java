@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -27,8 +29,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-
 public class JavaFX extends HBox {
+
     //setting the tiles
     private MyMqtt mqtt;
     private Threads threads;
@@ -53,10 +55,9 @@ public class JavaFX extends HBox {
     private Tile jerSensorTile;
     private Tile jerImageTile;
 
-    
     public JavaFX() throws IOException {
         threads = new Threads();
-        
+
         //Build the screen
         this.buildMqttPrompt();
 //        this.buildScreen();
@@ -64,16 +65,15 @@ public class JavaFX extends HBox {
 //        this.threads.startDHTThread(markHumidTile, markTempTile);
 //        this.threads.startDoorBellThread(markDoorBellTile);
 //        this.threads.startSenseLEDThread(markSensorTile);
- 
     }
-    
+
     private void buildMqttPrompt() throws IOException {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        
+
         Text scenetitle = new Text("Log into MQTT");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
@@ -99,171 +99,172 @@ public class JavaFX extends HBox {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction((e) -> {
-            try{
+            try {
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 actiontarget.setFill(Color.BLACK);
                 actiontarget.setText("Signing in...");
-                this.mqtt.connectMqtt();
-            } catch(Exception exc){
+                this.mqtt.connectClient();
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("Successfully signed in with user: " + userTextField.getText());
+                alert.showAndWait();
+            } catch (Exception exc) {
                 actiontarget.setFill(Color.FIREBRICK);
                 actiontarget.setText("Sign in failed");
                 userTextField.clear();
                 pwBox.clear();
             }
         });
-        
+
         this.getChildren().add(grid);
     }
-    
+
     private void buildScreen() throws IOException {
         //create the doorBell Tile
         //Generate a timestamp
         markDoorBellTile = TileBuilder.create()
-                        .skinType(Tile.SkinType.TEXT)
-                        .prefSize(350, 300)
-                        .textSize(Tile.TextSize.BIGGER)
-                        .title("Mark's doorbell tile")
-                        .description("Output from external program")
-                        .descriptionAlignment(Pos.CENTER_LEFT)
-                        .textVisible(true)
-                        .build();
-        
+                .skinType(Tile.SkinType.TEXT)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Mark's doorbell tile")
+                .description("Output from external program")
+                .descriptionAlignment(Pos.CENTER_LEFT)
+                .textVisible(true)
+                .build();
+
         antDoorBellTile = TileBuilder.create()
-                        .skinType(Tile.SkinType.TEXT)
-                        .prefSize(350, 300)
-                        .textSize(Tile.TextSize.BIGGER)
-                        .title("Antonio's doorbell tile")
-                        .description("Output from external program")
-                        .descriptionAlignment(Pos.CENTER_LEFT)
-                        .textVisible(true)
-                        .build();
-        
+                .skinType(Tile.SkinType.TEXT)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Antonio's doorbell tile")
+                .description("Output from external program")
+                .descriptionAlignment(Pos.CENTER_LEFT)
+                .textVisible(true)
+                .build();
+
         jerDoorBellTile = TileBuilder.create()
-                        .skinType(Tile.SkinType.TEXT)
-                        .prefSize(350, 300)
-                        .textSize(Tile.TextSize.BIGGER)
-                        .title("Jeremy's doorbell tile")
-                        .description("Output from external program")
-                        .descriptionAlignment(Pos.CENTER_LEFT)
-                        .textVisible(true)
-                        .build();
-        
+                .skinType(Tile.SkinType.TEXT)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Jeremy's doorbell tile")
+                .description("Output from external program")
+                .descriptionAlignment(Pos.CENTER_LEFT)
+                .textVisible(true)
+                .build();
+
         //create sensor tile
         markSensorTile = TileBuilder.create()
-                        .skinType(Tile.SkinType.TEXT)
-                        .prefSize(350, 300)
-                        .textSize(Tile.TextSize.BIGGER)
-                        .title("Mark's sensor tile")
-                        .description("Output from external program")
-                        .descriptionAlignment(Pos.CENTER_LEFT)
-                        .textVisible(true)
-                        .build();
-        
+                .skinType(Tile.SkinType.TEXT)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Mark's sensor tile")
+                .description("Output from external program")
+                .descriptionAlignment(Pos.CENTER_LEFT)
+                .textVisible(true)
+                .build();
+
         antSensorTile = TileBuilder.create()
-                        .skinType(Tile.SkinType.TEXT)
-                        .prefSize(350, 300)
-                        .textSize(Tile.TextSize.BIGGER)
-                        .title("Antonio's sensor tile")
-                        .description("Output from external program")
-                        .descriptionAlignment(Pos.CENTER_LEFT)
-                        .textVisible(true)
-                        .build();
-        
+                .skinType(Tile.SkinType.TEXT)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Antonio's sensor tile")
+                .description("Output from external program")
+                .descriptionAlignment(Pos.CENTER_LEFT)
+                .textVisible(true)
+                .build();
+
         jerSensorTile = TileBuilder.create()
-                        .skinType(Tile.SkinType.TEXT)
-                        .prefSize(350, 300)
-                        .textSize(Tile.TextSize.BIGGER)
-                        .title("Jeremy's Sensor tile")
-                        .description("Output from external program")
-                        .descriptionAlignment(Pos.CENTER_LEFT)
-                        .textVisible(true)
-                        .build();
-        
-        
-        
+                .skinType(Tile.SkinType.TEXT)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Jeremy's Sensor tile")
+                .description("Output from external program")
+                .descriptionAlignment(Pos.CENTER_LEFT)
+                .textVisible(true)
+                .build();
+
         //create tempTile
         markTempTile = TileBuilder.create()
-                              .skinType(Tile.SkinType.GAUGE)
-                              .prefSize(350, 300)
-                              .title("Mark's Temp Tile")
-                              .unit("C")
-                              .threshold(75)
-                              .build();
-        
+                .skinType(Tile.SkinType.GAUGE)
+                .prefSize(350, 300)
+                .title("Mark's Temp Tile")
+                .unit("C")
+                .threshold(75)
+                .build();
+
         antTempTile = TileBuilder.create()
-                              .skinType(Tile.SkinType.GAUGE)
-                              .prefSize(350, 300)
-                              .title("Antonio's Temp Tile")
-                              .unit("C")
-                              .threshold(75)
-                              .build();
-        
+                .skinType(Tile.SkinType.GAUGE)
+                .prefSize(350, 300)
+                .title("Antonio's Temp Tile")
+                .unit("C")
+                .threshold(75)
+                .build();
+
         jerTempTile = TileBuilder.create()
-                              .skinType(Tile.SkinType.GAUGE)
-                              .prefSize(350, 300)
-                              .title("Jeremy's Temp Tile")
-                              .unit("C")
-                              .threshold(75)
-                              .build();
-     
-        
+                .skinType(Tile.SkinType.GAUGE)
+                .prefSize(350, 300)
+                .title("Jeremy's Temp Tile")
+                .unit("C")
+                .threshold(75)
+                .build();
+
         //Create humidTile
         markHumidTile = TileBuilder.create()
-                               .skinType(Tile.SkinType.PERCENTAGE)
-                               .prefSize(350, 300)
-                               .title("Mark's Humid Tile")
-                               .unit("g.m-3")
-                               .maxValue(60)
-                               .build();
-        
+                .skinType(Tile.SkinType.PERCENTAGE)
+                .prefSize(350, 300)
+                .title("Mark's Humid Tile")
+                .unit("g.m-3")
+                .maxValue(60)
+                .build();
+
         antHumidTile = TileBuilder.create()
-                               .skinType(Tile.SkinType.PERCENTAGE)
-                               .prefSize(350, 300)
-                               .title("Antonio's Humid Tile")
-                               .unit("g.m-3")
-                               .maxValue(60)
-                               .build();
-        
+                .skinType(Tile.SkinType.PERCENTAGE)
+                .prefSize(350, 300)
+                .title("Antonio's Humid Tile")
+                .unit("g.m-3")
+                .maxValue(60)
+                .build();
+
         jerHumidTile = TileBuilder.create()
-                               .skinType(Tile.SkinType.PERCENTAGE)
-                               .prefSize(350, 300)
-                               .title("Jeremy's Humid Tile")
-                               .unit("g.m-3")
-                               .maxValue(60)
-                               .build();
-        
+                .skinType(Tile.SkinType.PERCENTAGE)
+                .prefSize(350, 300)
+                .title("Jeremy's Humid Tile")
+                .unit("g.m-3")
+                .maxValue(60)
+                .build();
+
         //setup the image tile
         markImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Mark's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Mark's Image Tile")
+                .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         antImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Antonio's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Antonio's Image Tile")
+                .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         jerImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Jeremy's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
-        
-       //Setup the Exit button
-       var exitButton = new Button("Exit");
-       //event handler for the exit button
-       exitButton.setOnAction(e -> endApplication());
-       //Setup the tile
-       var exitTile = TileBuilder.create()
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Jeremy's Image Tile")
+                .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
+        //Setup the Exit button
+        var exitButton = new Button("Exit");
+        //event handler for the exit button
+        exitButton.setOnAction(e -> endApplication());
+        //Setup the tile
+        var exitTile = TileBuilder.create()
                 .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
@@ -271,23 +272,23 @@ public class JavaFX extends HBox {
                 .graphic(exitButton)
                 .roundedCorners(false)
                 .build();
-       
-       
-       var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
-       var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
-       var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
-       var elems = new VBox(column1, column2, column3);
-  
-       //adding to the main screen
-       this.getChildren().add(elems);
-       
-       this.setSpacing(5);
-       
+
+        var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
+        var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
+        var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
+        var elems = new VBox(column1, column2, column3);
+
+        this.getChildren().clear();
+        //adding to the main screen
+        this.getChildren().add(elems);
+
+        this.setSpacing(5);
+
     }
-    
+
     private void endApplication() {
         this.threads.endThreads();
         Platform.exit();
-         
+
     }
 }
