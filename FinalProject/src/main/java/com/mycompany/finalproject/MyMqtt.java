@@ -20,7 +20,7 @@ public class MyMqtt {
     
     private String userName;
     private String passWord;
-    final String host = "21dbf98922614b33bd8ac076f14b64eb.s1.eu.hivemq.cloud";
+    final String host = "d851ff43cb294d18a69a6d253457ddce.s1.eu.hivemq.cloud";
     // create an MQTT client
     final Mqtt5BlockingClient client = MqttClient.builder()
                                         .useMqttVersion5()
