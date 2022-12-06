@@ -90,7 +90,20 @@ public class JavaFX extends HBox {
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
 
+        Button btn = new Button("Sign in");
+        HBox hbBtn = new HBox(10);
+        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(btn);
+        grid.add(hbBtn, 1, 4);
+        final Text actiontarget = new Text();
+        grid.add(actiontarget, 1, 6);
+
+        btn.setOnAction((e) -> {
+            actiontarget.setFill(Color.FIREBRICK);
+            actiontarget.setText("Sign in button pressed");
+        });
         
+        this.getChildren().add(grid);
     }
     
     private void buildScreen() throws IOException {
