@@ -7,10 +7,6 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -60,7 +56,7 @@ public class JavaFX extends HBox {
 
         //Build the screen
         this.buildMqttPrompt();
-//        this.buildScreen();
+        
 
 //        this.threads.startDHTThread(markHumidTile, markTempTile);
 //        this.threads.startDoorBellThread(markDoorBellTile);
@@ -109,6 +105,10 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
+                this.buildScreen();
+                this.threads.startDHTThread(markHumidTile, markTempTile);
+                this.threads.startDoorBellThread(markDoorBellTile);
+                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
             } catch (Exception exc) {
                 actiontarget.setFill(Color.FIREBRICK);
                 actiontarget.setText("Sign in failed");
@@ -236,35 +236,36 @@ public class JavaFX extends HBox {
 
         //setup the image tile
         markImageTile = TileBuilder.create()
-                .skinType(Tile.SkinType.IMAGE)
-                .prefSize(350, 300)
-                .title("Mark's Image Tile")
-                .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
-                .imageMask(Tile.ImageMask.RECTANGULAR)
-                .build();
-
+                            .skinType(Tile.SkinType.IMAGE)
+                            .prefSize(350, 300)
+                            .title("Mark's Image Tile")
+                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .imageMask(Tile.ImageMask.RECTANGULAR)
+                            .build();
+        
         antImageTile = TileBuilder.create()
-                .skinType(Tile.SkinType.IMAGE)
-                .prefSize(350, 300)
-                .title("Antonio's Image Tile")
-                .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
-                .imageMask(Tile.ImageMask.RECTANGULAR)
-                .build();
-
+                            .skinType(Tile.SkinType.IMAGE)
+                            .prefSize(350, 300)
+                            .title("Antonio's Image Tile")
+                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .imageMask(Tile.ImageMask.RECTANGULAR)
+                            .build();
+        
         jerImageTile = TileBuilder.create()
-                .skinType(Tile.SkinType.IMAGE)
-                .prefSize(350, 300)
-                .title("Jeremy's Image Tile")
-                .image(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")))
-                .imageMask(Tile.ImageMask.RECTANGULAR)
-                .build();
-
-        //Setup the Exit button
-        var exitButton = new Button("Exit");
-        //event handler for the exit button
-        exitButton.setOnAction(e -> endApplication());
-        //Setup the tile
-        var exitTile = TileBuilder.create()
+                            .skinType(Tile.SkinType.IMAGE)
+                            .prefSize(350, 300)
+                            .title("Jeremy's Image Tile")
+                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .imageMask(Tile.ImageMask.RECTANGULAR)
+                            .build();
+        
+        
+       //Setup the Exit button
+       var exitButton = new Button("Exit");
+       //event handler for the exit button
+       exitButton.setOnAction(e -> endApplication());
+       //Setup the tile
+       var exitTile = TileBuilder.create()
                 .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)

@@ -39,7 +39,7 @@ public class Camera extends Component{
      */
     public void takeStill() {
         takeStill(PicConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/Pictures/").build());
+                .outputPath("/home/markisawesome/NetBeansProject/data-comm-final-project/FinalProject/src/main/resources/images/").build());
     }
 
     /**
@@ -60,6 +60,33 @@ public class Camera extends Component{
         }
     }
 
+    /**
+     * Takes a video and saves it to the default Videos folder
+     *
+     * If a file already exists, the code will break. better use useDate while taking videos
+     */
+    public void takeVid() {
+        takeVid(VidConfig.Builder.newInstance()
+                .outputPath("/home/markisawesome/Videos/").recordTime(5000).build());
+    }
+
+    /**
+     * Takes a video with the configuration and saves it to the output path
+     *
+     * @param config path to the .h264 file
+     */
+    public void takeVid(VidConfig config) {
+        logDebug("Taking Video");
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("bash", "-c", config.asCommand());
+
+        try {
+            callBash(processBuilder);
+        } catch (Exception e) {
+            logError("Camera: Error while taking video: " + e.getMessage());
+        }
+    }
 
     /**
      * Uses a ProcessBuilder to call the bash of the RaspberryPI.
@@ -133,6 +160,30 @@ public class Camera extends Component{
         }
     }
 
+    /**
+     * Output Format of videos
+     * These modes determine the output of the video-file
+     * <p>
+     * The following encodings can be set
+     * {@link #H264}
+     * {@link #MJPEG}
+     * {@link #YUV420}
+     */
+    public enum VidEncoding {
+        H264("h264"),
+        MJPEG("mjpeg"),
+        YUV420("yuv420");
+
+        private final String encoding;
+
+        VidEncoding(String encoding) {
+            this.encoding = encoding;
+        }
+
+        public String getEncoding() {
+            return encoding;
+        }
+    }
 
     /**
      * Builder Pattern to create a config for a single Picture
@@ -206,6 +257,23 @@ public class Camera extends Component{
             return command.toString();
         }
 
+        /**
+         * Builder Pattern, to create a config for a single picture
+         *
+         * A Config is buildable like this:
+         * var config = Camera.PicConfig.Builder.newInstance()
+         *                 .outputPath("/home/cdavis/Pictures/")
+         *                 .delay(3000)
+         *                 .disablePreview(true)
+         *                 .encoding(Camera.PicEncoding.PNG)
+         *                 .useDate(true)
+         *                 .quality(93)
+         *                 .width(1280)
+         *                 .height(800)
+         *                 .build();
+         *
+         * Every property can be added or not.
+         */
         public static class Builder{
             private String outputPath;
             private boolean useDate;
@@ -271,6 +339,110 @@ public class Camera extends Component{
 
             public PicConfig build() {
                 return new PicConfig(this);
+            }
+        }
+    }
+
+    /**
+     * Builder Pattern to create a config for a video
+     */
+    public static class VidConfig {
+        /** where should it be saved and what's the filename?*/
+        public final String outputPath;
+        /** using datetime as filename?
+         * if yes, then the outputPath should be a path, not a file
+         */
+        public final boolean useDate;
+        /** the length in milliseconds, how long the camera is actively filming */
+        public final int recordTime;
+        /** the output-format of the video-file */
+        public final VidEncoding encoding;
+        /** when true, there is no preview on the raspberry-pi */
+        public final boolean disablePreview;
+
+        /**
+         * constructor for the config
+         *
+         * @param builder builder with the defined options
+         */
+        private VidConfig(Builder builder){
+            this.outputPath = builder.outputPath;
+            this.recordTime = builder.recordTime;
+            this.encoding = builder.encoding;
+            this.useDate = builder.useDate;
+            this.disablePreview = builder.disablePreview;
+        }
+
+        /**
+         * Creates a callable bash command with the defined options.
+         *
+         * @return a string that can be called from the bash
+         */
+        public String asCommand(){
+            StringBuilder command = new StringBuilder("libcamera-vid -t " + recordTime);
+            if (useDate){
+                command.append(" -o '").append(outputPath)
+                        .append(LocalDateTime.now()).append(".")
+                        .append((encoding != null) ? encoding : "h264")
+                        .append("'");
+            }else{
+                command.append(" -o '").append(outputPath).append("'");}
+            if(encoding != null){
+                command.append(" --codec ").append(encoding.getEncoding());}
+            if (disablePreview){command.append(" -n");}
+            return command.toString();
+        }
+
+        /**
+         * Builder Pattern, to create a config for a video
+         *
+         * A Config is buildable like this:
+         * var vidconfig = Camera.VidConfig.Builder.newInstance()
+         *                 .outputPath("/home/cdavis/Videos/")
+         *                 .recordTime(3000)
+         *                 .useDate(true)
+         *                 .build();
+         *
+         * Every Property can be added or not.
+         */
+        public static class Builder{
+            private String outputPath;
+            private int recordTime;
+            private VidEncoding encoding;
+            private boolean useDate;
+
+            public static Builder newInstance(){
+                return new Builder();
+            }
+            private boolean disablePreview;
+
+            public Builder outputPath(String outputPath){
+                this.outputPath = outputPath;
+                return this;
+            }
+
+            public Builder recordTime(int recordTime){
+                this.recordTime = recordTime;
+                return this;
+            }
+
+            public Builder encoding(VidEncoding encoding){
+                this.encoding = encoding;
+                return this;
+            }
+
+            public Builder useDate(boolean useDate){
+                this.useDate = useDate;
+                return this;
+            }
+            
+            public Builder disablePreview(boolean disablePreview){
+                this.disablePreview = disablePreview;
+                return this;
+            }
+            
+            public VidConfig build() {
+                return new VidConfig(this);
             }
         }
     }
