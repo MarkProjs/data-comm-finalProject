@@ -59,6 +59,10 @@ public class JavaFX extends HBox {
  
     }
     
+    private void buildMqttPrompt() throws IOException {
+        
+    }
+    
     private void buildScreen() throws IOException {
         //create the doorBell Tile
         //Generate a timestamp
