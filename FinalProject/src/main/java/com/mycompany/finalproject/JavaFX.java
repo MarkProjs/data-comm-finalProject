@@ -100,9 +100,9 @@ public class JavaFX extends HBox {
 
         btn.setOnAction((e) -> {
             try {
-                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 actiontarget.setFill(Color.BLACK);
                 actiontarget.setText("Signing in...");
+                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 this.mqtt.connectClient();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
