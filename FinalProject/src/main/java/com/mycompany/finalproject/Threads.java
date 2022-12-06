@@ -7,7 +7,6 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import javafx.application.Platform;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  *
@@ -81,7 +80,7 @@ public class Threads {
     
     }
     
-    public void startSenseLEDThread(Tile sensorTile) {
+    public void startSenseLEDThread(Tile sensorTile, Tile imageTile) {
         Thread senseLEDThread = new Thread(()-> {
             while(running) {
                 try{
@@ -97,17 +96,16 @@ public class Threads {
                     @Override
                     public void run() {
                         try{
-                            process.runSensor(sensorTile);
+                            process.runSensor(sensorTile, imageTile);
                           
                         }
                         catch(IOException e){
-                            System.err.println("Some is wrong in the SenseLED Thread");
+                            System.out.println("Something is wrong in the SenseLED Thread. There is an IOException");
                         }
                     }
                 });
             }
-        });
-        
+        });        
         senseLEDThread.start();
     }
     

@@ -29,33 +29,22 @@ public class CameraApp implements Application {
         
         //Configure the camera setup
         var config = Camera.PicConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/Pictures/")
+                .outputPath("/home/markisawesome/NetBeansProject/data-comm-final-project/FinalProject/src/main/resources/images/picTaken.png")
 		.delay(3000)
 		.disablePreview(true)
 		.encoding(Camera.PicEncoding.PNG)
-		.useDate(true)
+		.useDate(false)
 		.quality(93)
 		.width(1280)
 		.height(800)
 		.build();
+
         //Take the picture
         camera.takeStill(config);
+
         System.out.println("waiting for camera to take pic");
-        delay(4000);
-    }
-
-    
-    public static void main(String[] args) {
-
-        //Initialize the Pi4J Runtime Context
-        var pi4j = Pi4J.newAutoContext();
-
-        CameraApp runApp = new CameraApp();
-        runApp.execute(pi4j);
-        
-        // Shutdown Pi4J
-        pi4j.shutdown();
-
+        delay(1000);
+                
     }
     
 }
