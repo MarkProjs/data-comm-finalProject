@@ -6,9 +6,11 @@ package com.mycompany.finalproject;
 
 import com.pi4j.Pi4J;
 import eu.hansolo.tilesfx.Tile;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import javafx.scene.image.Image;
+import org.apache.commons.io.FileUtils;
 
 public class ProcessCodes {
     //execute the python code for DHT11
@@ -56,6 +58,28 @@ public class ProcessCodes {
         if(output.equals("led turned on")) {
            var timeStamp2 = new Date();
            tileText = "led turned on at " + timeStamp2.toString();
+           //setting the image tile
+           createThread(imageTile);
+        }
+        else if (output.equals("led turned off")){
+            tileText = "led is off";
+            
+        }
+        senseTile.setText(tileText);
+    }
+    
+    private void deleteImage() {
+        try {
+            FileUtils.cleanDirectory(new File("src/main/resources/images/"));
+        }catch (IOException e) {
+            System.err.println("Something is wrong when deleting the image");
+        }
+    }
+    
+    private void createThread(Tile imageTile) {
+        Thread getImage = new Thread(()->{
+            //delete the image in the images resource directory
+            deleteImage();
             //Initialize the Pi4J Runtime Context
             var pi4j = Pi4J.newAutoContext();
 
@@ -64,13 +88,16 @@ public class ProcessCodes {
         
             // Shutdown Pi4J
             pi4j.shutdown();
-            
-            imageTile.setImage(new Image(this.getClass().getResourceAsStream("/images/sunny-clip-art.png")));
+        });
+        
+        getImage.start();
+        try {
+            getImage.join();
+            Thread.sleep(1000);
+            imageTile.setImage(new Image(this.getClass().getResourceAsStream("/images/picTaken.png")));
+        }catch (InterruptedException e) {
+            System.out.println("Somthing went wrong when taking the image");
         }
-        else if (output.equals("led turned off")){
-            tileText = "led is off";
-            
-        }
-        senseTile.setText(tileText);
+        
     }
 }

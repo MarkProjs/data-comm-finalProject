@@ -19,6 +19,12 @@
         <exec.mainClass>com.mycompany.finalproject.FinalProject</exec.mainClass>
     </properties>
     <dependencies>
+        <!--commons io-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
         <!-- JAVAFX dependency-->
         <dependency>
             <groupId>org.openjfx</groupId>

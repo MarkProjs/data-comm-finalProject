@@ -6,6 +6,7 @@ module com.mycompany.finalproject.FinalProject {
     requires com.pi4j.library.pigpio;
     requires org.slf4j;
     requires org.slf4j.simple;
+    requires org.apache.commons.io;
     requires javafx.controls;
     requires java.logging;
     requires eu.hansolo.tilesfx;

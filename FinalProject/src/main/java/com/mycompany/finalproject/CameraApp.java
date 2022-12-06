@@ -29,7 +29,7 @@ public class CameraApp implements Application {
         
         //Configure the camera setup
         var config = Camera.PicConfig.Builder.newInstance()
-                .outputPath("/home/markisawesome/NetBeansProject/data-comm-final-project/FinalProject/src/main/resources/images/picTaken")
+                .outputPath("/home/markisawesome/NetBeansProject/data-comm-final-project/FinalProject/src/main/resources/images/picTaken.png")
 		.delay(3000)
 		.disablePreview(true)
 		.encoding(Camera.PicEncoding.PNG)
