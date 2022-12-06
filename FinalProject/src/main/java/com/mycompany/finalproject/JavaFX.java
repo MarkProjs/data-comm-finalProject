@@ -259,21 +259,6 @@ public class JavaFX extends HBox {
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
-        
-       //Setup the Exit button
-       var exitButton = new Button("Exit");
-       //event handler for the exit button
-       exitButton.setOnAction(e -> endApplication());
-       //Setup the tile
-       var exitTile = TileBuilder.create()
-                .skinType(Tile.SkinType.CUSTOM)
-                .prefSize(350, 300)
-                .textSize(Tile.TextSize.BIGGER)
-                .title("Quit the application")
-                .graphic(exitButton)
-                .roundedCorners(false)
-                .build();
-
         var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
         var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
         var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
