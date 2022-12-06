@@ -7,6 +7,8 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -95,26 +97,31 @@ public class JavaFX extends HBox {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction((e) -> {
-            try {
-                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
+//            try {
                 actiontarget.setFill(Color.BLACK);
                 actiontarget.setText("Signing in...");
+                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 this.mqtt.connectClient();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
+            try {
                 this.buildScreen();
+            } catch (IOException ex) {
+                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startDoorBellThread(markDoorBellTile);
                 this.threads.startSenseLEDThread(markSensorTile, markImageTile);
-            } catch (Exception exc) {
-                actiontarget.setFill(Color.FIREBRICK);
-                actiontarget.setText("Sign in failed");
-                userTextField.clear();
-                pwBox.clear();
-            }
+//            } catch (Exception exc) {
+//                actiontarget.setFill(Color.FIREBRICK);
+//                actiontarget.setText("Sign in failed");
+//                System.out.println(exc);
+//                userTextField.clear();
+//                pwBox.clear();
+//            }
         });
 
         this.getChildren().add(grid);
