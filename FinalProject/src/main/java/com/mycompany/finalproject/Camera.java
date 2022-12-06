@@ -39,7 +39,7 @@ public class Camera extends Component{
      */
     public void takeStill() {
         takeStill(PicConfig.Builder.newInstance()
-                .outputPath("../../../../resources/images/").build());
+                .outputPath("/home/markisawesome/NetBeansProject/data-comm-final-project/FinalProject/src/main/resources/images/").build());
     }
 
     /**
