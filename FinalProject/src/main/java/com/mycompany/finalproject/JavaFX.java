@@ -29,9 +29,11 @@ import javafx.scene.text.Text;
 
 public class JavaFX extends HBox {
 
-    //setting the tiles
     private MyMqtt mqtt;
-    private Threads threads;
+    private final Threads threads;
+    private PiKeyStore keystore;
+
+    //setting the tiles
     //mark's tiles
     private Tile markHumidTile;
     private Tile markTempTile;
@@ -58,7 +60,6 @@ public class JavaFX extends HBox {
 
         //Build the screen
         this.buildMqttPrompt();
-        
 
 //        this.threads.startDHTThread(markHumidTile, markTempTile);
 //        this.threads.startDoorBellThread(markDoorBellTile);
@@ -97,8 +98,8 @@ public class JavaFX extends HBox {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction((e) -> {
-        actiontarget.setFill(Color.BLACK);
-        actiontarget.setText("Signing in...");
+            actiontarget.setFill(Color.BLACK);
+            actiontarget.setText("Signing in...");
             try {
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 this.mqtt.connectClient();
@@ -107,11 +108,7 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
-                this.buildScreen();    
-                this.threads.startDHTThread(markHumidTile, markTempTile);
-                this.threads.startDoorBellThread(markDoorBellTile);
-                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
-           
+                buildKeystorePrompt();
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 actiontarget.setFill(Color.FIREBRICK);
@@ -122,6 +119,7 @@ public class JavaFX extends HBox {
             }
         });
 
+        this.getChildren().clear();
         this.getChildren().add(grid);
     }
 
@@ -155,23 +153,27 @@ public class JavaFX extends HBox {
         grid.add(hbBtn, 1, 4);
 
         btn.setOnAction((e) -> {
-                try {
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Information Dialog");
-                        alert.setHeaderText(null);
-                        alert.setContentText("message");
-                        alert.showAndWait();
-                        this.buildScreen();    
-                        this.threads.startDHTThread(markHumidTile, markTempTile);
-                        this.threads.startDoorBellThread(markDoorBellTile);
-                        this.threads.startSenseLEDThread(markSensorTile, markImageTile);
-                } catch (Exception exc) {
-                        Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
-                        System.out.println(exc);
-                        userTextField.clear();
-                        pwBox.clear();
-                }
+            try {
+//                        this.keystore = new PiKeyStore(pwBox.getText(), userTextField.getText());
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("message");
+                alert.showAndWait();
+                this.buildScreen();
+                this.threads.startDHTThread(markHumidTile, markTempTile);
+                this.threads.startDoorBellThread(markDoorBellTile);
+                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+            } catch (Exception exc) {
+                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
+                System.out.println(exc);
+                userTextField.clear();
+                pwBox.clear();
+            }
         });
+
+        this.getChildren().clear();
+        this.getChildren().add(grid);
     }
 
     private void buildScreen() throws IOException {
@@ -290,29 +292,29 @@ public class JavaFX extends HBox {
 
         //setup the image tile
         markImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Mark's Image Tile")
-                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Mark's Image Tile")
+                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         antImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Antonio's Image Tile")
-                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Antonio's Image Tile")
+                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         jerImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Jeremy's Image Tile")
-                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Jeremy's Image Tile")
+                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
         var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
         var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
