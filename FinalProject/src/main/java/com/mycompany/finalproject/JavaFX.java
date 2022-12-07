@@ -7,6 +7,8 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -96,22 +98,25 @@ public class JavaFX extends HBox {
 
         btn.setOnAction((e) -> {
             try {
-                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 actiontarget.setFill(Color.BLACK);
                 actiontarget.setText("Signing in...");
+                this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 this.mqtt.connectClient();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
-                this.buildScreen();
+                this.buildScreen();    
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startDoorBellThread(markDoorBellTile);
                 this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+           
             } catch (Exception exc) {
+                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 actiontarget.setFill(Color.FIREBRICK);
                 actiontarget.setText("Sign in failed");
+                System.out.println(exc);
                 userTextField.clear();
                 pwBox.clear();
             }
@@ -243,7 +248,7 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Mark's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
@@ -251,7 +256,7 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Antonio's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
@@ -259,25 +264,10 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Jeremy's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
-        
-       //Setup the Exit button
-       var exitButton = new Button("Exit");
-       //event handler for the exit button
-       exitButton.setOnAction(e -> endApplication());
-       //Setup the tile
-       var exitTile = TileBuilder.create()
-                .skinType(Tile.SkinType.CUSTOM)
-                .prefSize(350, 300)
-                .textSize(Tile.TextSize.BIGGER)
-                .title("Quit the application")
-                .graphic(exitButton)
-                .roundedCorners(false)
-                .build();
-
         var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
         var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
         var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
