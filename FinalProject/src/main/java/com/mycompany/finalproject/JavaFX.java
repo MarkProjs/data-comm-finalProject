@@ -58,11 +58,6 @@ public class JavaFX extends HBox {
 
         //Build the screen
         this.buildMqttPrompt();
-        
-
-//        this.threads.startDHTThread(markHumidTile, markTempTile);
-//        this.threads.startDoorBellThread(markDoorBellTile);
-//        this.threads.startSenseLEDThread(markSensorTile);
     }
 
     private void buildMqttPrompt() throws IOException {

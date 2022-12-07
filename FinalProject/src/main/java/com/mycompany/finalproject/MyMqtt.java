@@ -34,6 +34,10 @@ public class MyMqtt {
         this.passWord = passWord;
     }
     
+    public Mqtt5BlockingClient getClient() {
+        return client;
+    }
+    
     public MyMqtt connectMqtt(){
        Scanner reader = new Scanner(System.in);
        boolean isTrue = true;
