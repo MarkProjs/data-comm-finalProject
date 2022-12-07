@@ -20,8 +20,8 @@ public class PiKeyStoreTest {
     
     @Test
     public void testHelloWorld() throws Exception {
-              
         String expResult = "Hello World";
+        System.out.println(expResult);
         assertNotNull(expResult);
         
         //This assertion will only be executed if the previous assertion is valid

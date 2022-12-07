@@ -154,7 +154,7 @@ public class JavaFX extends HBox {
 
         btn.setOnAction((e) -> {
             try {
-//                        this.keystore = new PiKeyStore(pwBox.getText(), userTextField.getText());
+                // this.keystore = new PiKeyStore(pwBox.getText().toCharArray(), userTextField.getText());
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
