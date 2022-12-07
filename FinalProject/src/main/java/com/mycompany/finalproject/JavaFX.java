@@ -54,6 +54,9 @@ public class JavaFX extends HBox {
     private Tile jerDoorBellTile;
     private Tile jerSensorTile;
     private Tile jerImageTile;
+    
+    //Exit tiles
+    private Tile exitTile;
 
     public JavaFX() throws IOException {
         threads = new Threads();
@@ -104,7 +107,25 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
-                buildKeystorePrompt();
+//                buildKeystorePrompt();
+                if(userTextField.getText().equals("MarkisAwesome")){
+                    this.buildScreen();
+                    this.threads.startDHTThread(markHumidTile, markTempTile);
+                    this.threads.startDoorBellThread(markDoorBellTile);
+                    this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+                }
+                if(userTextField.getText().equals("asimonelli")){
+                    this.buildScreen();
+                    this.threads.startDHTThread(antHumidTile, antTempTile);
+                    this.threads.startDoorBellThread(antDoorBellTile);
+                    this.threads.startSenseLEDThread(antSensorTile, antImageTile);
+                }
+                if(userTextField.getText().equals("jeremy")){
+                    this.buildScreen();
+                    this.threads.startDHTThread(jerHumidTile, jerTempTile);
+                    this.threads.startDoorBellThread(jerDoorBellTile);
+                    this.threads.startSenseLEDThread(jerSensorTile, jerImageTile);
+                }
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 actiontarget.setFill(Color.FIREBRICK);
@@ -324,11 +345,26 @@ public class JavaFX extends HBox {
                 .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                 .imageMask(Tile.ImageMask.RECTANGULAR)
                 .build();
+        
+        var exitButton = new Button("Exit");
+        
+        exitButton.setOnAction(e -> endApplication());
+        
+        var exitTile = TileBuilder.create()
+                .skinType(Tile.SkinType.CUSTOM)
+                .prefSize(350, 300)
+                .textSize(Tile.TextSize.BIGGER)
+                .title("Quit the application")
+                .graphic(exitButton)
+                .roundedCorners(false)
+                .build();
+
+                
 
         var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
         var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
         var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
-        var elems = new VBox(column1, column2, column3);
+        var elems = new VBox(column1, column2, column3, exitTile);
 
         this.getChildren().clear();
         //adding to the main screen
