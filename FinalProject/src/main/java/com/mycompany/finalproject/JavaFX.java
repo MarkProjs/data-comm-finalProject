@@ -29,9 +29,11 @@ import javafx.scene.text.Text;
 
 public class JavaFX extends HBox {
 
-    //setting the tiles
     private MyMqtt mqtt;
-    private Threads threads;
+    private final Threads threads;
+    private PiKeyStore keystore;
+
+    //setting the tiles
     //mark's tiles
     private Tile markHumidTile;
     private Tile markTempTile;
@@ -92,9 +94,9 @@ public class JavaFX extends HBox {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction((e) -> {
+            actiontarget.setFill(Color.BLACK);
+            actiontarget.setText("Signing in...");
             try {
-                actiontarget.setFill(Color.BLACK);
-                actiontarget.setText("Signing in...");
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                 this.mqtt.connectClient();
                 Alert alert = new Alert(AlertType.INFORMATION);
@@ -102,11 +104,7 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
-                this.buildScreen();    
-                this.threads.startDHTThread(markHumidTile, markTempTile);
-                this.threads.startDoorBellThread(markDoorBellTile);
-                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
-           
+                buildKeystorePrompt();
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 actiontarget.setFill(Color.FIREBRICK);
@@ -117,6 +115,60 @@ public class JavaFX extends HBox {
             }
         });
 
+        this.getChildren().clear();
+        this.getChildren().add(grid);
+    }
+
+    private void buildKeystorePrompt() {
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        Text scenetitle = new Text("Credentials for Keystore");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        Label userPath = new Label("File Path:");
+        grid.add(userPath, 0, 1);
+
+        TextField userTextField = new TextField();
+        grid.add(userTextField, 1, 1);
+
+        Label pw = new Label("Password:");
+        grid.add(pw, 0, 2);
+
+        PasswordField pwBox = new PasswordField();
+        grid.add(pwBox, 1, 2);
+
+        Button btn = new Button("Load");
+        HBox hbBtn = new HBox(10);
+        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(btn);
+        grid.add(hbBtn, 1, 4);
+
+        btn.setOnAction((e) -> {
+            try {
+                // this.keystore = new PiKeyStore(pwBox.getText().toCharArray(), userTextField.getText());
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("message");
+                alert.showAndWait();
+                this.buildScreen();
+                this.threads.startDHTThread(markHumidTile, markTempTile);
+                this.threads.startDoorBellThread(markDoorBellTile);
+                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+            } catch (Exception exc) {
+                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
+                System.out.println(exc);
+                userTextField.clear();
+                pwBox.clear();
+            }
+        });
+
+        this.getChildren().clear();
         this.getChildren().add(grid);
     }
 
@@ -236,29 +288,29 @@ public class JavaFX extends HBox {
 
         //setup the image tile
         markImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Mark's Image Tile")
-                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Mark's Image Tile")
+                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         antImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Antonio's Image Tile")
-                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Antonio's Image Tile")
+                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         jerImageTile = TileBuilder.create()
-                            .skinType(Tile.SkinType.IMAGE)
-                            .prefSize(350, 300)
-                            .title("Jeremy's Image Tile")
-                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
-                            .imageMask(Tile.ImageMask.RECTANGULAR)
-                            .build();
-        
+                .skinType(Tile.SkinType.IMAGE)
+                .prefSize(350, 300)
+                .title("Jeremy's Image Tile")
+                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .imageMask(Tile.ImageMask.RECTANGULAR)
+                .build();
+
         var column1 = new HBox(markHumidTile, markTempTile, markSensorTile, markDoorBellTile, markImageTile);
         var column2 = new HBox(antHumidTile, antTempTile, antSensorTile, antDoorBellTile, antImageTile);
         var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
