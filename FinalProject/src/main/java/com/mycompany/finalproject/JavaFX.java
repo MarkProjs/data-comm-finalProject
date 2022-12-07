@@ -162,6 +162,18 @@ public class JavaFX extends HBox {
                     this.threads.startDoorBellThread(markDoorBellTile);
                     this.threads.startSenseLEDThread(markSensorTile, markImageTile);
                 }
+                if(userTextField.getText().equals("asimonelli")){
+                    this.buildScreen();
+                    this.threads.startDHTThread(antHumidTile, antTempTile);
+                    this.threads.startDoorBellThread(antDoorBellTile);
+                    this.threads.startSenseLEDThread(antSensorTile, antImageTile);
+                }
+                if(userTextField.getText().equals("jeremy")){
+                    this.buildScreen();
+                    this.threads.startDHTThread(jerHumidTile, jerTempTile);
+                    this.threads.startDoorBellThread(jerDoorBellTile);
+                    this.threads.startSenseLEDThread(jerSensorTile, jerImageTile);
+                }
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
