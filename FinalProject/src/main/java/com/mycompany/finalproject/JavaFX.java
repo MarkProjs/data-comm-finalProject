@@ -156,10 +156,12 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("message");
                 alert.showAndWait();
-                this.buildScreen();
-                this.threads.startDHTThread(markHumidTile, markTempTile);
-                this.threads.startDoorBellThread(markDoorBellTile);
-                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+                if(userTextField.getText().equals("MarkisAwesome")){
+                    this.buildScreen();
+                    this.threads.startDHTThread(markHumidTile, markTempTile);
+                    this.threads.startDoorBellThread(markDoorBellTile);
+                    this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+                }
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
