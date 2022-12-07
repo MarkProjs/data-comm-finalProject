@@ -78,11 +78,12 @@ public class MyMqtt {
                 .send();
 
         System.out.println("Connected successfully");
-
-        // subscribe to the topic "my/test/topic"
-        client.subscribeWith()
-                .topicFilter("my/test/topic")
-                .send();
+        
+//        // subscribe to the topic "my/test/topic"
+//        client.subscribeWith()
+//                .topicFilter("my/test/topic")
+//                .send();
+        
 
         // set a callback that is called when a message is received (using the async API style)
         client.toAsync().publishes(ALL, publish -> {
@@ -94,11 +95,38 @@ public class MyMqtt {
             client.disconnect();
         });
 
+//        // publish a message to the topic "my/test/topic"
+//        client.publishWith()
+//                .topic("my/test/topic")
+//                .payload(UTF_8.encode("Hello"))
+//                .send();
+    }
+    
+    public void subscribe(String topic) {
+       // subscribe to the topic "my/test/topic"
+        client.subscribeWith()
+                .topicFilter(topic)
+                .send(); 
+    }
+    
+    public void publish(String topic, String message) {
         // publish a message to the topic "my/test/topic"
         client.publishWith()
-                .topic("my/test/topic")
-                .payload(UTF_8.encode("Hello"))
+                .topic(topic)
+                .payload(UTF_8.encode(message))
                 .send();
+    }
+    
+    public void getMessage() {
+        // set a callback that is called when a message is received (using the async API style)
+        client.toAsync().publishes(ALL, publish -> {
+            System.out.println("Received message: " +
+                publish.getTopic() + " -> " +
+                UTF_8.decode(publish.getPayload().get()));
+
+            // disconnect the client after a message was received
+            client.disconnect();
+        });
     }
     
 }
