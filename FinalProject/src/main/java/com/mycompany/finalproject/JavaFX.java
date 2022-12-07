@@ -97,7 +97,7 @@ public class JavaFX extends HBox {
         grid.add(actiontarget, 1, 6);
 
         btn.setOnAction((e) -> {
-//            try {
+            try {
                 actiontarget.setFill(Color.BLACK);
                 actiontarget.setText("Signing in...");
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
@@ -107,21 +107,19 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully signed in with user: " + userTextField.getText());
                 alert.showAndWait();
-            try {
-                this.buildScreen();
-            } catch (IOException ex) {
-                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                this.buildScreen();    
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startDoorBellThread(markDoorBellTile);
                 this.threads.startSenseLEDThread(markSensorTile, markImageTile);
-//            } catch (Exception exc) {
-//                actiontarget.setFill(Color.FIREBRICK);
-//                actiontarget.setText("Sign in failed");
-//                System.out.println(exc);
-//                userTextField.clear();
-//                pwBox.clear();
-//            }
+           
+            } catch (Exception exc) {
+                Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
+                actiontarget.setFill(Color.FIREBRICK);
+                actiontarget.setText("Sign in failed");
+                System.out.println(exc);
+                userTextField.clear();
+                pwBox.clear();
+            }
         });
 
         this.getChildren().add(grid);
@@ -246,7 +244,7 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Mark's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
@@ -254,7 +252,7 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Antonio's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
@@ -262,7 +260,7 @@ public class JavaFX extends HBox {
                             .skinType(Tile.SkinType.IMAGE)
                             .prefSize(350, 300)
                             .title("Jeremy's Image Tile")
-                            .image(new Image(this.getClass().getResourceAsStream("/image/sunny-clip-art.png")))
+                            .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
                             .imageMask(Tile.ImageMask.RECTANGULAR)
                             .build();
         
