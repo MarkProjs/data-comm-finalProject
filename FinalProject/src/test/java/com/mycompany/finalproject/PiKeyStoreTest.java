@@ -52,5 +52,17 @@ public class PiKeyStoreTest {
         assertNotNull(privateKey);
         assertTrue(privateKey.getAlgorithm().equals("EC"));
     }
+
+    @Test
+    public void testStoreKeyStore() throws Exception{
+        PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
+        String newKsPath = "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\keystore\\newKeyStoreFileName.ks";
+        keyStore.storeKeyStore(newKsPath);
+        PiKeyStore newKeyStore = new PiKeyStore(ksPw, newKsPath);
+        
+        assertEquals(keyStore.getPublicKey(ksAlias), newKeyStore.getPublicKey(ksAlias));
+        assertEquals(keyStore.getPrivateKey(ksAlias), newKeyStore.getPrivateKey(ksAlias));
+
+    }
     
 }
