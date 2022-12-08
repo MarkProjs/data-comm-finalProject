@@ -14,6 +14,8 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import static com.hivemq.client.mqtt.MqttGlobalPublishFilter.ALL;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.nio.CharBuffer;
 import java.util.Scanner;
 
 
@@ -21,6 +23,7 @@ public class MyMqtt {
     
     private String userName;
     private String passWord;
+    private String messageText;
     final String host = "d851ff43cb294d18a69a6d253457ddce.s1.eu.hivemq.cloud";
     // create an MQTT client
     final Mqtt5BlockingClient client = MqttClient.builder()
@@ -99,14 +102,24 @@ public class MyMqtt {
                 .send();
     }
     
-    public void getMessage() {
+    public void getMessage(String topic) {
         // set a callback that is called when a message is received (using the async API style)
         client.toAsync().publishes(ALL, publish -> {
-            System.out.println("Received message: " +
-                publish.getTopic() + " -> " +
-                UTF_8.decode(publish.getPayload().get()));
-        });
+            // System.out.println("Received message: " +
+            //     publish.getTopic() + " -> " +
+            //     UTF_8.decode(publish.getPayload().get())); 
+            if (topic.equals(publish.getTopic().toString())) {
+                messageText = UTF_8.decode(publish.getPayload().get()).toString();
+            }
+            disconnect();
+        });    
     }
+
+    public String getMessageText() {
+        return messageText;
+    }
+
+
     
     public void disconnect() {
         // disconnect the client after a message was received

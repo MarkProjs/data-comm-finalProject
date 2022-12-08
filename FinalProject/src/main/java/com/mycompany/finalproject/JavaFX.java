@@ -337,7 +337,7 @@ public class JavaFX extends HBox {
         //Setup the tile
         var exitTile = TileBuilder.create()
                 .skinType(Tile.SkinType.CUSTOM)
-                .prefSize(350, 300)
+                .prefSize(1750, 300)
                 .textSize(Tile.TextSize.BIGGER)
                 .title("Quit the application")
                 .graphic(exitButton)

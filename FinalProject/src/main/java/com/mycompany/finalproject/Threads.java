@@ -113,6 +113,21 @@ public class Threads {
         });        
         senseLEDThread.start();
     }
+
+    public void startSubscribeThread(MyMqtt mqtt, String topic, TextArea DoorbellTxtA, TextArea SensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
+        Thread subscribeThread = new Thread(()->{
+            while(running) {
+                try{
+                    //Delay thread for 2 seconds
+                    Thread.sleep(1000);
+            
+                }catch(InterruptedException e) {
+                    System.err.println("SenseLED thread got interrupted. ");
+                }
+            }
+        });
+        subscribeThread.start();
+    }
     
     public void endThreads() {
         this.running = false;

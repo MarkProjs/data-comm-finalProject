@@ -14,8 +14,9 @@ public class testMqtt {
         MyMqtt hiveMq = MyMqtt.connectMqtt();
         hiveMq.connectClient();
         hiveMq.subscribe("testSub/test/topic");
-        hiveMq.getMessage();
+        hiveMq.getMessage("testSub/test/topic");
         hiveMq.publish("testSub/test/topic", "Test publish and receive message");
+        System.out.println(hiveMq.getMessageText());
           
     }
 }
