@@ -2,6 +2,7 @@ package com.mycompany.finalproject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
@@ -10,6 +11,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.SecretKey;
@@ -92,17 +94,9 @@ public class PiKeyStore {
 		return hash;
 	}
 
-	public void storeKeyStore(String path) throws IOException {
-		java.io.FileOutputStream fos = null;
-		try {
-			fos = new java.io.FileOutputStream(path); // newKeyStoreName
-			ks.store(fos, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (fos != null) {
-				fos.close();
-			}
+	public void storeKeyStore(String path) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+		try (FileOutputStream fos = new FileOutputStream(path)) {
+			ks.store(fos, this.password);
 		}
 	}
 }
