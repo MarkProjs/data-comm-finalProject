@@ -39,25 +39,26 @@ public class JavaFX extends HBox {
     //mark's tiles
     private Tile markHumidTile;
     private Tile markTempTile;
-    private TextArea markDoorBellTxtA = new TextArea();
-    private TextArea markSensorTxtA = new TextArea();
+    private final TextArea markDoorBellTxtA = new TextArea();
+    private final TextArea markSensorTxtA = new TextArea();
     private Tile markImageTile;
 
     //Anotnio's tiles
     private Tile antHumidTile;
     private Tile antTempTile;
-    private TextArea antDoorBellTxtA = new TextArea();
-    private TextArea antSensorTxtA = new TextArea();
+    private final TextArea antDoorBellTxtA = new TextArea();
+    private final TextArea antSensorTxtA;
     private Tile antImageTile;
 
     //Jeremy's tiles
     private Tile jerHumidTile;
     private Tile jerTempTile;
-    private TextArea jerDoorBellTxtA = new TextArea();
-    private TextArea jerSensorTxtA = new TextArea();
+    private final TextArea jerDoorBellTxtA = new TextArea();
+    private final TextArea jerSensorTxtA = new TextArea();
     private Tile jerImageTile;
 
     public JavaFX() throws IOException {
+        this.antSensorTxtA = new TextArea();
         threads = new Threads();
 
         //Build the screen
@@ -159,9 +160,9 @@ public class JavaFX extends HBox {
                 alert.setContentText("message");
                 alert.showAndWait();
                 this.threads.startDoorBellThread(markDoorBellTxtA);
+                this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
                 this.buildScreen();
                 this.threads.startDHTThread(markHumidTile, markTempTile);
-//                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
@@ -310,7 +311,6 @@ public class JavaFX extends HBox {
                 .skinType(Tile.SkinType.IMAGE)
                 .prefSize(350, 300)
                 .title("Mark's Image Tile")
-                .image(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png"))))
                 .imageMask(Tile.ImageMask.RECTANGULAR)
                 .build();
 

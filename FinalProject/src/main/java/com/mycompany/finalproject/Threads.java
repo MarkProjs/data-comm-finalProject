@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -88,7 +89,7 @@ public class Threads {
     
     }
     
-    public void startSenseLEDThread(Tile sensorTile, Tile imageTile) {
+    public void startSenseLEDThread(TextArea sensorTile, Tile imageTile) {
         Thread senseLEDThread = new Thread(()-> {
             while(running) {
                 try{
@@ -98,20 +99,16 @@ public class Threads {
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
-                
-                //update the active node
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
-                            process.runSensor(sensorTile, imageTile);
-                          
-                        }
-                        catch(IOException e){
-                            System.out.println("Something is wrong in the SenseLED Thread. There is an IOException");
-                        }
-                    }
-                });
+                int randValue = rand.nextInt(100);
+                String text = "";
+                if(randValue % 5 == 0) {
+                    timeStamp = new Date();
+                    text = "buzzer turned on at " + timeStamp.toString();
+                    imageTile.setImage(new Image(this.getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")));
+                }else {
+                    text = "buzzer is off";
+                }
+                sensorTile.setText(text);
             }
         });        
         senseLEDThread.start();
