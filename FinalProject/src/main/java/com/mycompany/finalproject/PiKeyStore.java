@@ -96,6 +96,19 @@ public class PiKeyStore {
 		}
 	}
 
+	public void savePublicKey(String publicKeyAlias, String keyAsString) {
+		try {
+			byte[] keyBytes = Base64.getDecoder().decode(keyAsString);
+			CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+			InputStream in = new ByteArrayInputStream(keyBytes);
+			X509Certificate cert = (X509Certificate)certFactory.generateCertificate(in);
+
+			this.ks.setCertificateEntry(publicKeyAlias, cert);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private byte[] computeHash(char[] pwd, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		var spec = new PBEKeySpec(pwd, salt, 65536, 128);
 		var skf = SecretKeyFactory.getInstance(hashingAlgo);
