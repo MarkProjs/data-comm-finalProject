@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Random;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import org.json.*;  
 
 /**
  *
@@ -114,7 +115,7 @@ public class Threads {
         senseLEDThread.start();
     }
 
-    public void startSubscribeThread(MyMqtt mqtt, String topic, TextArea DoorbellTxtA, TextArea SensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
+    public void getMessageThread(MyMqtt mqtt, String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
         Thread subscribeThread = new Thread(()->{
             while(running) {
                 try{
@@ -124,9 +125,36 @@ public class Threads {
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
+
+                
+                mqtt.getMessage(topic);
+                JSONObject json = new JSONObject(mqtt.getMessageText());
+                doorbellTxtA.setText(json.getString("doorbell"));
+                sensorTxtA.setText(json.getString("sensor"));
+                humidTile.setValue(json.getDouble("humidity"));
+                tempTile.setValue(json.getDouble("temperature"));
             }
         });
         subscribeThread.start();
+    }
+
+    public void startPublishThread(MyMqtt mqtt, String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
+        Thread publishThread = new Thread(()->{
+            while(running) {
+                try{
+                    //Delay thread for 2 seconds
+                    Thread.sleep(1000);
+            
+                }catch(InterruptedException e) {
+                    System.err.println("SenseLED thread got interrupted. ");
+                }
+                String message = "";
+                mqtt.subscribe(topic);
+                mqtt.publish(topic, message);
+            }
+        });
+        publishThread.start();
+
     }
     
     public void endThreads() {

@@ -104,10 +104,7 @@ public class MyMqtt {
     
     public void getMessage(String topic) {
         // set a callback that is called when a message is received (using the async API style)
-        client.toAsync().publishes(ALL, publish -> {
-            // System.out.println("Received message: " +
-            //     publish.getTopic() + " -> " +
-            //     UTF_8.decode(publish.getPayload().get())); 
+        client.toAsync().publishes(ALL, publish -> { 
             if (topic.equals(publish.getTopic().toString())) {
                 messageText = UTF_8.decode(publish.getPayload().get()).toString();
             }

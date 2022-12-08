@@ -1,5 +1,6 @@
 
 module com.mycompany.finalproject.FinalProject {
+    requires org.json;
     requires com.pi4j;
     requires com.pi4j.plugin.raspberrypi;
     requires com.pi4j.plugin.pigpio;
