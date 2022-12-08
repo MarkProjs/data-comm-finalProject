@@ -13,7 +13,7 @@ import java.io.IOException;
  * @author Mark Agluba
  */
 public class Threads {
-    private ProcessCodes process = new ProcessCodes();
+    private final ProcessCodes process = new ProcessCodes();
     
     //Flag to monitor the threads
     private static boolean running = true;
@@ -24,25 +24,23 @@ public class Threads {
                 try {
                     //Delay thread for 2 seconds
                     Thread.sleep(1000);
-                    
-                } catch(InterruptedException e) {
+
+                } catch (InterruptedException e) {
                     System.err.println("DHT thread got interrupted. ");
                 }
-                
+
                 //update the active node
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             process.runDht(humidTile, tempTile);
-                        }
-                        catch(IOException e) {
+                        } catch (IOException e) {
                             System.err.println("Some is wrong in the DHT Thread");
                         }
                     }
                 });
             }
-        
         });
         
         dhtThread.start();
