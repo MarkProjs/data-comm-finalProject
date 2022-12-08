@@ -21,13 +21,12 @@ public class PiKeyStoreTest {
     } 
     
     @Test
-    public void testHelloWorld() throws Exception {
-        String expResult = "Hello World";
-        System.out.println(expResult);
-        assertNotNull(expResult);
-        
-        //This assertion will only be executed if the previous assertion is valid
-        assertTrue(expResult.contains("Hello World"));
+    public void testConstructor() throws Exception {
+        char[] pw = "jeremy".toCharArray();
+        PiKeyStore keyStore = new PiKeyStore(pw, ksPath);
+        assertNotNull(keyStore);
+        assertArrayEquals(pw, keyStore.password);
+        assertTrue(keyStore.getClass() == PiKeyStore.class);
     }
     
 }
