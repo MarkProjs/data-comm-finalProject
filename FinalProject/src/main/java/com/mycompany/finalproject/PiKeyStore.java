@@ -1,11 +1,17 @@
 package com.mycompany.finalproject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.SecretKey;
@@ -14,15 +20,17 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class PiKeyStore {
-	final String hashingAlgo = "PBKDF2WithHmacSHA1";
-	KeyStore ks; // KeyStore.getInstance("JKS");
+	final String hashingAlgo = "SHA256withECDSA";
+	KeyStore ks;
 	char[] password;
 
 	public PiKeyStore(char[] password, String path) {
+		if (path.equals("")) {
+			throw new IllegalArgumentException("Path must not be empty");
+		}
 		this.password = password.clone();
-		// might need null check and default value for path
 		try {
-			this.ks = KeyStore.getInstance(KeyStore.getDefaultType());
+			this.ks = KeyStore.getInstance("PKCS12");
 			loadKeyStore(path);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -30,15 +38,19 @@ public class PiKeyStore {
 	}
 
 	private void loadKeyStore(String path) throws IOException {
-		java.io.FileInputStream keyStoreData = null;
+		InputStream is = null;
 		try {
-			keyStoreData = new java.io.FileInputStream(path);
-			ks.load(keyStoreData, this.password);
+			File file = new File(path);
+			if (file.exists()) {
+				System.out.println("keystore file exists");
+				is = new FileInputStream(file);
+			}
+			ks.load(is, this.password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (keyStoreData != null) {
-				keyStoreData.close();
+			if (is != null) {
+				is.close();
 			}
 		}
 	}
@@ -51,8 +63,11 @@ public class PiKeyStore {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		PrivateKey myPrivateKey = pkEntry.getPrivateKey();
-		return myPrivateKey;
+		return pkEntry.getPrivateKey();
+	}
+	
+	public Key getPublicKey(String publicKeyAlias) throws KeyStoreException {
+		return this.ks.getCertificate(publicKeyAlias).getPublicKey();
 	}
 
 	public void saveSecretKey(String secretKeyAlias) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -79,17 +94,9 @@ public class PiKeyStore {
 		return hash;
 	}
 
-	public void storeKeyStore(String path) throws IOException {
-		java.io.FileOutputStream fos = null;
-		try {
-			fos = new java.io.FileOutputStream(path); // newKeyStoreName
-			ks.store(fos, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (fos != null) {
-				fos.close();
-			}
+	public void storeKeyStore(String path) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+		try (FileOutputStream fos = new FileOutputStream(path)) {
+			ks.store(fos, this.password);
 		}
 	}
 }

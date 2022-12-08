@@ -7,6 +7,7 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -326,7 +327,7 @@ public class JavaFX extends HBox {
                 .skinType(Tile.SkinType.IMAGE)
                 .prefSize(350, 300)
                 .title("Mark's Image Tile")
-                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .image(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png"))))
                 .imageMask(Tile.ImageMask.RECTANGULAR)
                 .build();
 
@@ -334,7 +335,7 @@ public class JavaFX extends HBox {
                 .skinType(Tile.SkinType.IMAGE)
                 .prefSize(350, 300)
                 .title("Antonio's Image Tile")
-                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .image(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png"))))
                 .imageMask(Tile.ImageMask.RECTANGULAR)
                 .build();
 
@@ -342,7 +343,7 @@ public class JavaFX extends HBox {
                 .skinType(Tile.SkinType.IMAGE)
                 .prefSize(350, 300)
                 .title("Jeremy's Image Tile")
-                .image(new Image(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")))
+                .image(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png"))))
                 .imageMask(Tile.ImageMask.RECTANGULAR)
                 .build();
         

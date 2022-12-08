@@ -7,10 +7,10 @@ module com.mycompany.finalproject.FinalProject {
     requires org.slf4j;
     requires org.slf4j.simple;
     requires org.apache.commons.io;
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires java.logging;
-    requires eu.hansolo.tilesfx;
-    requires com.hivemq.client.mqtt;
+    requires transitive eu.hansolo.tilesfx;
+    requires transitive com.hivemq.client.mqtt;
     exports com.mycompany.finalproject;
     uses com.pi4j.extension.Extension;
     uses com.pi4j.provider.Provider;
