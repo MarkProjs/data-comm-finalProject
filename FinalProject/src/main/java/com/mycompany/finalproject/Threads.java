@@ -14,6 +14,9 @@ import javafx.scene.image.Image;
 import org.json.*;
 import java.nio.file.Files;
 import java.io.File;
+import java.io.IOException;
+import java.awt.image.*;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -23,7 +26,7 @@ public class Threads {
     private final ProcessCodes process = new ProcessCodes();
     
     //Flag to monitor the threads
-    private static boolean running = true;
+    private boolean running = true;
     private Random rand = new Random();
     private Date timeStamp;
     
@@ -128,19 +131,26 @@ public class Threads {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
                 
+                mqtt.getData(topic);
+                try {
+                    JSONObject json = new JSONObject(mqtt.getMessageText());
+                    //making the image appear
+                    String imageString = json.getString("image");
+                    byte[] imageByteArray = imageString.getBytes();
+                    ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
+                    BufferedImage bImage = ImageIO.read(bis);
+                    ImageIO.write(bImage, "png", new File("src/main/resources/images/"+topic+".png"));
+                    imageTile.setImage(new Image(this.getClass().getResourceAsStream(topic+".png")));
+                    //getting the values
+                    doorbellTxtA.setText(json.getString("doorbell"));
+                    sensorTxtA.setText(json.getString("sensor"));
+                    humidTile.setValue(json.getDouble("humidity"));
+                    tempTile.setValue(json.getDouble("temperature"));
+
+                }catch(IOException e) {
+                    System.out.println("Something wrong when changing the image.");
+                }
                 
-                mqtt.getMessage(topic);
-                JSONObject json = new JSONObject(mqtt.getMessageText());
-                //making the image appear
-                String imageString = json.getString("image");
-                byte[] imageByteArray = imageString.getBytes();
-                ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
-                BufferedImage bImage = ImageIO.read(bis);
-                //getting the values
-                doorbellTxtA.setText(json.getString("doorbell"));
-                sensorTxtA.setText(json.getString("sensor"));
-                humidTile.setValue(json.getDouble("humidity"));
-                tempTile.setValue(json.getDouble("temperature"));
             }
         });
         subscribeThread.start();
@@ -156,9 +166,28 @@ public class Threads {
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
-                String message = "";
-                mqtt.subscribe(topic);
-                mqtt.publish(topic, message);
+
+                try {
+                    //get the image to convert to string
+                    File fi = new File("src/main/resources/defaultImage/sunny-clip-art.png");
+                    byte[] fileContent = Files.readAllBytes(fi.toPath());
+                    String imageString = new String(fileContent);
+
+                    //do the json stringified
+                    String message = new JSONObject()
+                                .put("doorbell", doorbellTxtA.getText())
+                                .put("sensor", sensorTxtA.getText())
+                                .put("humidity", humidTile.getValue())
+                                .put("temperature", tempTile.getValue())
+                                .put("image", imageString)
+                                .toString();
+                    mqtt.subscribe(topic);
+                    mqtt.publish(topic, message);
+                } catch(IOException e) {
+                    System.out.println("The path to the image does not exist");
+                }
+                
+                
             }
         });
         publishThread.start();

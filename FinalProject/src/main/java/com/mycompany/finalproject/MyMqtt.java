@@ -102,7 +102,7 @@ public class MyMqtt {
                 .send();
     }
     
-    public void getMessage(String topic) {
+    public void getData(String topic) {
         // set a callback that is called when a message is received (using the async API style)
         client.toAsync().publishes(ALL, publish -> { 
             if (topic.equals(publish.getTopic().toString())) {
