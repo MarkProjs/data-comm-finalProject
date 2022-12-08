@@ -159,8 +159,8 @@ public class JavaFX extends HBox {
                 alert.showAndWait();
                 this.buildScreen();
                 this.threads.startDHTThread(markHumidTile, markTempTile);
-                this.threads.startDoorBellThread(markDoorBellTile);
-                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
+//                this.threads.startDoorBellThread(markDoorBellTile);
+//                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
@@ -320,7 +320,6 @@ public class JavaFX extends HBox {
         this.getChildren().clear();
         //adding to the main screen
         this.getChildren().add(elems);
-
         this.setSpacing(5);
 
     }

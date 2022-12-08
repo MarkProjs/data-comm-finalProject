@@ -19,8 +19,12 @@ public class Threads {
     private static boolean running = true;
     
     public void startDHTThread(Tile humidTile, Tile tempTile) {
+        humidTile.setValue(0.0);
+        tempTile.setValue(0.0);
         Thread dhtThread = new Thread(()-> {
-            int count = 0
+            int count = 0;
+            double humidity = 30.2;
+            double temperature = 24.5;
             while (running) {
                 try {
                     //Delay thread for 2 seconds
@@ -29,21 +33,29 @@ public class Threads {
                 } catch (InterruptedException e) {
                     System.err.println("DHT thread got interrupted. ");
                 }
-
-                //update the active node
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            process.runDht(humidTile, tempTile);
-                        } catch (IOException e) {
-                            System.err.println("Some is wrong in the DHT Thread");
-                        }
-                    }
-                });
+                if (count % 30 == 0) {
+                    double newHumid = humidity + 0.2;
+                    double newTemp = temperature + 0.1;
+                    humidTile.setValue(newHumid);
+                    tempTile.setValue(newTemp);     
+                }else {
+                    humidTile.setValue(humidity);
+                }
+                count++;
+//                //update the active node
+//                Platform.runLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            
+//                            process.runDht(humidTile, tempTile);
+//                        } catch (IOException e) {
+//                            System.err.println("Some is wrong in the DHT Thread");
+//                        }
+//                    }
+//                });
             }
-        });
-        
+        });    
         dhtThread.start();
     }
     
