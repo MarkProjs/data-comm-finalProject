@@ -7,6 +7,7 @@ package com.mycompany.finalproject;
 import eu.hansolo.tilesfx.Tile;
 import javafx.application.Platform;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  *
@@ -21,26 +22,35 @@ public class Threads {
     public void startDHTThread(Tile humidTile, Tile tempTile) {
         humidTile.setValue(0.0);
         tempTile.setValue(0.0);
+        
         Thread dhtThread = new Thread(()-> {
+            
             int count = 0;
             double humidity = 30.2;
             double temperature = 24.5;
             while (running) {
+               
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
 
                 } catch (InterruptedException e) {
                     System.err.println("DHT thread got interrupted. ");
                 }
                 if (count % 30 == 0) {
-                    double newHumid = humidity + 0.2;
-                    double newTemp = temperature + 0.1;
-                    humidTile.setValue(newHumid);
-                    tempTile.setValue(newTemp);     
-                }else {
+                    Random rand = new Random();
+                    int value = rand.nextInt(2);
+                    if (value == 0) {
+                        humidity += 0.2;
+                        temperature += 0.1;
+                    }
+                    else {
+                        humidity -= 0.2;
+                        temperature -= 0.1;
+                    }
                     humidTile.setValue(humidity);
-                }
+                    tempTile.setValue(temperature);
+                }    
                 count++;
 //                //update the active node
 //                Platform.runLater(new Runnable() {
@@ -70,19 +80,19 @@ public class Threads {
                     System.err.println("DoorBell thread got interrupted. ");
                 }
                 
-                //update the active node
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
-                            process.runDoorBell(doorBellTile);
-                            
-                        }
-                        catch(IOException e) {
-                            System.err.println("Some is wrong in the Doorbell Thread");
-                        }
-                    }            
-                });
+//                //update the active node
+//                Platform.runLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try{
+//                            process.runDoorBell(doorBellTile);
+//                            
+//                        }
+//                        catch(IOException e) {
+//                            System.err.println("Some is wrong in the Doorbell Thread");
+//                        }
+//                    }            
+//                });
             }
         
         });
