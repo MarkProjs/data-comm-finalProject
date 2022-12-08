@@ -28,8 +28,7 @@ public class Threads {
             int count = 0;
             double humidity = 30.2;
             double temperature = 24.5;
-            while (running) {
-               
+            while (running) { 
                 try {
                     //Delay thread for 2 seconds
                     Thread.sleep(5000);
@@ -37,7 +36,7 @@ public class Threads {
                 } catch (InterruptedException e) {
                     System.err.println("DHT thread got interrupted. ");
                 }
-                if (count % 30 == 0) {
+                if (count % 10 == 0) {
                     Random rand = new Random();
                     int value = rand.nextInt(2);
                     if (value == 0) {
