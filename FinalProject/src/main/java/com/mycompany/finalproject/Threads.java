@@ -5,18 +5,15 @@
 package com.mycompany.finalproject;
 
 import eu.hansolo.tilesfx.Tile;
-import javafx.application.Platform;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
-
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import org.json.*;  
+import org.json.*;
+import java.nio.file.Files;
+import java.io.File;
 
 /**
  *
@@ -134,7 +131,7 @@ public class Threads {
                 
                 mqtt.getMessage(topic);
                 JSONObject json = new JSONObject(mqtt.getMessageText());
-                //making theimage appear
+                //making the image appear
                 String imageString = json.getString("image");
                 byte[] imageByteArray = imageString.getBytes();
                 ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);

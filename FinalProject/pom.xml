@@ -91,11 +91,21 @@
             <artifactId>pi4j-plugin-pigpio</artifactId>
             <version>${pi4j.version}</version>
         </dependency>
+        
+        <!--JSON Object-->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>LATEST</version>
+            <version>20220924</version>
         </dependency>
+        
+        <!--IMAGE DEPENDENCIES-->
+        <dependency>
+            <groupId>com.jtransc</groupId>
+            <artifactId>jtransc-rt</artifactId>
+            <version>0.6.8</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
