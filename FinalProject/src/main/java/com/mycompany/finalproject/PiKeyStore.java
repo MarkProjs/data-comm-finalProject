@@ -1,5 +1,6 @@
 package com.mycompany.finalproject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,7 +13,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -68,6 +72,12 @@ public class PiKeyStore {
 	
 	public Key getPublicKey(String publicKeyAlias) throws KeyStoreException {
 		return this.ks.getCertificate(publicKeyAlias).getPublicKey();
+	}
+
+	public String getPublicKeyToSend(String publicKeyAlias) throws KeyStoreException{
+		Key publicKey = this.getPublicKey(publicKeyAlias);
+		String keyAsString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+		return keyAsString;
 	}
 
 	public void saveSecretKey(String secretKeyAlias) throws NoSuchAlgorithmException, InvalidKeySpecException {
