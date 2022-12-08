@@ -160,9 +160,9 @@ public class JavaFX extends HBox {
                 alert.setContentText("message");
                 alert.showAndWait();
                 this.threads.startDoorBellThread(markDoorBellTxtA);
-                this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
                 this.buildScreen();
                 this.threads.startDHTThread(markHumidTile, markTempTile);
+                this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);

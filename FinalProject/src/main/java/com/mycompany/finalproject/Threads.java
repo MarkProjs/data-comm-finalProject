@@ -99,16 +99,21 @@ public class Threads {
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
+                System.out.println("before if statement");
                 int randValue = rand.nextInt(100);
+                System.out.println(randValue);
                 String text = "";
                 if(randValue % 5 == 0) {
                     timeStamp = new Date();
-                    text = "buzzer turned on at " + timeStamp.toString();
+                    text = "led turned on at " + timeStamp.toString();
+                    System.out.println("before image");
                     imageTile.setImage(new Image(this.getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")));
+                    System.out.println("afer image");
                 }else {
-                    text = "buzzer is off";
+                    text = "led is off";
                 }
                 sensorTile.setText(text);
+                System.out.println("after if statement");
             }
         });        
         senseLEDThread.start();
