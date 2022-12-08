@@ -20,6 +20,7 @@ public class Threads {
     
     public void startDHTThread(Tile humidTile, Tile tempTile) {
         Thread dhtThread = new Thread(()-> {
+            int count = 0
             while (running) {
                 try {
                     //Delay thread for 2 seconds
