@@ -12,19 +12,19 @@ import java.security.Key;
 
 /* Test class for PiKeyStore class */
 public class PiKeyStoreTest {
-    
+
     // fields if needed
     String ksPath;
     char[] ksPw;
     String ksAlias;
-    
+
     // Constructor for the test class
     public PiKeyStoreTest() {
         // change to own absolute path (required)
         ksPath = "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\keystore\\ECcertif.ks";
         ksPw = "jeremy".toCharArray();
         ksAlias = "jrmy";
-    } 
+    }
 
     @Test
     public void testConstructor() throws Exception {
@@ -32,6 +32,7 @@ public class PiKeyStoreTest {
 
         assertNotNull(keyStore);
         assertArrayEquals(ksPw, keyStore.password);
+        assertEquals("jrmy", keyStore.ks.aliases().nextElement());
         assertTrue(keyStore.getClass() == PiKeyStore.class);
     }
 
@@ -54,14 +55,14 @@ public class PiKeyStoreTest {
     }
 
     @Test
-    public void testStoreKeyStore() throws Exception{
+    public void testStoreKeyStore() throws Exception {
         PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
         String newKsPath = "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\keystore\\newKeyStoreFileName.ks";
         keyStore.storeKeyStore(newKsPath);
         PiKeyStore newKeyStore = new PiKeyStore(ksPw, newKsPath);
-        
+
         assertEquals(keyStore.getPublicKey(ksAlias), newKeyStore.getPublicKey(ksAlias));
         assertEquals(keyStore.getPrivateKey(ksAlias), newKeyStore.getPrivateKey(ksAlias));
     }
-    
+
 }
