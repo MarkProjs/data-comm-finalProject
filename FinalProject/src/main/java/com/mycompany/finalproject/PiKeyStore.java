@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
@@ -60,8 +61,11 @@ public class PiKeyStore {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		PrivateKey myPrivateKey = pkEntry.getPrivateKey();
-		return myPrivateKey;
+		return pkEntry.getPrivateKey();
+	}
+	
+	public Key getPublicKey(String publicKeyAlias) throws KeyStoreException {
+		return this.ks.getCertificate(publicKeyAlias).getPublicKey();
 	}
 
 	public void saveSecretKey(String secretKeyAlias) throws NoSuchAlgorithmException, InvalidKeySpecException {
