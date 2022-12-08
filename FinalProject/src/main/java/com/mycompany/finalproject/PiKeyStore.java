@@ -19,10 +19,12 @@ public class PiKeyStore {
 	char[] password;
 
 	public PiKeyStore(char[] password, String path) {
+		if (path.equals("")) {
+			throw new IllegalArgumentException("Path must not be empty");
+		}
 		this.password = password.clone();
-		// might need null check and default value for path
 		try {
-			this.ks = KeyStore.getInstance(KeyStore.getDefaultType());
+			this.ks = KeyStore.getInstance("PKCS12");
 			loadKeyStore(path);
 		} catch (Exception e) {
 			e.printStackTrace();
