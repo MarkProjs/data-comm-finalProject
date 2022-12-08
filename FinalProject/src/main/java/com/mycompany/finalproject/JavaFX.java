@@ -159,7 +159,7 @@ public class JavaFX extends HBox {
                 alert.showAndWait();
                 this.buildScreen();
                 this.threads.startDHTThread(markHumidTile, markTempTile);
-//                this.threads.startDoorBellThread(markDoorBellTile);
+                this.threads.startDoorBellThread(markDoorBellTile);
 //                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
@@ -177,7 +177,7 @@ public class JavaFX extends HBox {
         //create the doorBell Tile
         //Generate a timestamp
         markDoorBellTile = TileBuilder.create()
-                .skinType(Tile.SkinType.TEXT)
+                .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
                 .title("Mark's doorbell tile")

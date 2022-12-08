@@ -20,6 +20,7 @@ public class Threads {
     //Flag to monitor the threads
     private static boolean running = true;
     private Random rand = new Random();
+    private Date timeStamp;
     
     public void startDHTThread(Tile humidTile, Tile tempTile) {
         humidTile.setValue(0.0);
@@ -57,25 +58,28 @@ public class Threads {
         dhtThread.start();
     }
     
-    public void startDoorBellThread(Tile doorBellTile) {
+    public void startDoorBellThread(Tile doorBellTile) {       
         Thread doorBellThread = new Thread(()-> {
+            int count = 1;
             while(running) {
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                     
                 } catch(InterruptedException e) {
                     System.err.println("DoorBell thread got interrupted. ");
                 }
-                
-                int randValue = rand.nextInt(100);
-                if(randValue % 5 == 0) {
-                    var timeStamp = new Date();
-                    doorBellTile.setText("buzzer turned on at " + timeStamp.toString());
+                doorBellTile.
+                String text = "";
+                if(count % 25 == 0) {
+                    timeStamp = new Date();
+                    text = "buzzer turned on at " + timeStamp.toString();            
                 }
                 else {
-                    doorBellTile.setText("buzzer is off");
+                    text = "buzzer is off";
                 }
+                doorBellTile.setText(text);
+                count++;
             }
         
         });
