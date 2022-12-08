@@ -169,7 +169,8 @@ public class Threads {
 
                 try {
                     //get the image to convert to string
-                    File fi = new File("src/main/resources/defaultImage/sunny-clip-art.png");
+                    
+                    File fi = new File("data-comm-final-project/FinalProject/src/main/resources/defaultImage.png");
                     byte[] fileContent = Files.readAllBytes(fi.toPath());
                     String imageString = new String(fileContent);
 

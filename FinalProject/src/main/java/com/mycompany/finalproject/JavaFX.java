@@ -159,10 +159,13 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("message");
                 alert.showAndWait();
-                this.threads.startDoorBellThread(markDoorBellTxtA);
                 this.buildScreen();
+                this.threads.startDoorBellThread(markDoorBellTxtA);
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
+                this.threads.startPublishThread(mqtt, "project/mark", markDoorBellTxtA, markSensorTxtA, markHumidTile, markTempTile, markImageTile);
+                this.threads.getMessageThread(mqtt, "project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
+                this.threads.getMessageThread(mqtt, "porject/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
@@ -337,7 +340,7 @@ public class JavaFX extends HBox {
         //Setup the tile
         var exitTile = TileBuilder.create()
                 .skinType(Tile.SkinType.CUSTOM)
-                .prefSize(1750, 300)
+                .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
                 .title("Quit the application")
                 .graphic(exitButton)
