@@ -6,9 +6,14 @@ package com.mycompany.finalproject;
 
 import eu.hansolo.tilesfx.Tile;
 import javafx.application.Platform;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import org.json.*;  
@@ -125,10 +130,16 @@ public class Threads {
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
-
+                
                 
                 mqtt.getMessage(topic);
                 JSONObject json = new JSONObject(mqtt.getMessageText());
+                //making theimage appear
+                String imageString = json.getString("image");
+                byte[] imageByteArray = imageString.getBytes();
+                ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
+                BufferedImage bImage = ImageIO.read(bis);
+                //getting the values
                 doorbellTxtA.setText(json.getString("doorbell"));
                 sensorTxtA.setText(json.getString("sensor"));
                 humidTile.setValue(json.getDouble("humidity"));
