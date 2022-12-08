@@ -51,18 +51,6 @@ public class Threads {
                     tempTile.setValue(temperature);
                 }    
                 count++;
-//                //update the active node
-//                Platform.runLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            
-//                            process.runDht(humidTile, tempTile);
-//                        } catch (IOException e) {
-//                            System.err.println("Some is wrong in the DHT Thread");
-//                        }
-//                    }
-//                });
             }
         });    
         dhtThread.start();
