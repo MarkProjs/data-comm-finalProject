@@ -74,7 +74,7 @@ public class PiKeyStore {
 		return this.ks.getCertificate(publicKeyAlias).getPublicKey();
 	}
 
-	public String getPublicKeyToSend(String publicKeyAlias) throws KeyStoreException{
+	public String getPublicKeyAsString(String publicKeyAlias) throws KeyStoreException{
 		Key publicKey = this.getPublicKey(publicKeyAlias);
 		String keyAsString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
 		return keyAsString;
