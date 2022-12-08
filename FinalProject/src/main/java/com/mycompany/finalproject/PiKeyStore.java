@@ -14,8 +14,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class PiKeyStore {
-	final String hashingAlgo = "PBKDF2WithHmacSHA1";
-	KeyStore ks; // KeyStore.getInstance("JKS");
+	final String hashingAlgo = "SHA256withECDSA";
+	KeyStore ks;
 	char[] password;
 
 	public PiKeyStore(char[] password, String path) {
