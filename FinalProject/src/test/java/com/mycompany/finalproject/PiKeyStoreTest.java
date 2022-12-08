@@ -46,6 +46,19 @@ public class PiKeyStoreTest {
     }
 
     @Test
+    public void testGetPublicKeyAsString() throws Exception {
+        PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
+        String keyAsString = keyStore.getPublicKeyAsString(ksAlias);
+        System.out.println(keyAsString);
+
+        assertNotNull(keyAsString);
+        assertEquals(
+                "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEshkstfORfPYoqkuEpMHg7PPSk" +
+                        "+Njm4uzBDo1kXGkyJWQiYzwJkTNz3XRfWp7EKLRltBzbidqpJ8wDrlw7AFs5A==",
+                keyAsString);
+    }
+
+    @Test
     public void testGetPrivateKey() throws Exception {
         PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
         Key privateKey = keyStore.getPrivateKey(ksAlias);
