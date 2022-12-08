@@ -1,6 +1,9 @@
 package com.mycompany.finalproject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
@@ -32,15 +35,19 @@ public class PiKeyStore {
 	}
 
 	private void loadKeyStore(String path) throws IOException {
-		java.io.FileInputStream keyStoreData = null;
+		InputStream is = null;
 		try {
-			keyStoreData = new java.io.FileInputStream(path);
-			ks.load(keyStoreData, this.password);
+			File file = new File(path);
+			if (file.exists()) {
+				System.out.println("keystore file exists");
+				is = new FileInputStream(file);
+			}
+			ks.load(is, this.password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (keyStoreData != null) {
-				keyStoreData.close();
+			if (is != null) {
+				is.close();
 			}
 		}
 	}
