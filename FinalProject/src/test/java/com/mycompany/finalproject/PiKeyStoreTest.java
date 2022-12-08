@@ -38,4 +38,13 @@ public class PiKeyStoreTest {
         assertNotNull(publicKey);
         assertTrue(publicKey.getAlgorithm().equals("EC"));
     }
+
+    @Test
+    public void testGetPrivateKey() throws Exception {
+        PiKeyStore keyStore = new PiKeyStore("jeremy".toCharArray(), ksPath);
+        Key privateKey = keyStore.getPrivateKey("jrmy");
+        assertNotNull(privateKey);
+        assertTrue(privateKey.getAlgorithm().equals("EC"));
+    }
+    
 }
