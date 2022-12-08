@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PiKeyStoreTest {
     
     // fields if needed
+    String ksPath;
     
     //Constructor for the test class
     public PiKeyStoreTest() {
-        // init fields if needed
+        // change to own absolute path (required)
+        ksPath = "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\keystore\\ECcertif.ks";
     } 
     
     @Test
