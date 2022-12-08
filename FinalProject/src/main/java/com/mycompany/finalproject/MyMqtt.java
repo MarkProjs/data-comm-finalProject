@@ -12,6 +12,7 @@ import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 
 import static com.hivemq.client.mqtt.MqttGlobalPublishFilter.ALL;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.Scanner;
 
@@ -38,7 +39,7 @@ public class MyMqtt {
         return client;
     }
     
-    public MyMqtt connectMqtt(){
+    public static MyMqtt connectMqtt(){
        Scanner reader = new Scanner(System.in);
        boolean isTrue = true;
        String userName = "";
@@ -78,27 +79,59 @@ public class MyMqtt {
                 .send();
 
         System.out.println("Connected successfully");
+        
+//        // subscribe to the topic "my/test/topic"
+//        client.subscribeWith()
+//                .topicFilter("my/test/topic")
+//                .send();
+        
 
-        // subscribe to the topic "my/test/topic"
+//        // set a callback that is called when a message is received (using the async API style)
+//        client.toAsync().publishes(ALL, publish -> {
+//            System.out.println("Received message: " +
+//                publish.getTopic() + " -> " +
+//                UTF_8.decode(publish.getPayload().get()));
+//
+//            // disconnect the client after a message was received
+//            client.disconnect();
+//        });
+
+//        // publish a message to the topic "my/test/topic"
+//        client.publishWith()
+//                .topic("my/test/topic")
+//                .payload(UTF_8.encode("Hello"))
+//                .send();
+    }
+    
+    public void subscribe(String topic) {
+       // subscribe to the topic "my/test/topic"
         client.subscribeWith()
-                .topicFilter("my/test/topic")
+                .topicFilter(topic)
+                .qos(MqttQos.EXACTLY_ONCE)
+                .send(); 
+    }
+    
+    public void publish(String topic, String message) {
+        // publish a message to the topic "my/test/topic"
+        client.publishWith()
+                .topic(topic)
+                .payload(UTF_8.encode(message))
+                .qos(MqttQos.EXACTLY_ONCE)
                 .send();
-
+    }
+    
+    public void getMessage() {
         // set a callback that is called when a message is received (using the async API style)
         client.toAsync().publishes(ALL, publish -> {
             System.out.println("Received message: " +
                 publish.getTopic() + " -> " +
                 UTF_8.decode(publish.getPayload().get()));
-
-            // disconnect the client after a message was received
-            client.disconnect();
         });
-
-        // publish a message to the topic "my/test/topic"
-        client.publishWith()
-                .topic("my/test/topic")
-                .payload(UTF_8.encode("Hello"))
-                .send();
+    }
+    
+    public void disconnect() {
+        // disconnect the client after a message was received
+        client.disconnect();
     }
     
 }
