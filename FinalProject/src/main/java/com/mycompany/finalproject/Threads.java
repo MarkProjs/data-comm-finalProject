@@ -66,7 +66,7 @@ public class Threads {
             while(running) {
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                     
                 } catch(InterruptedException e) {
                     System.err.println("DoorBell thread got interrupted. ");
