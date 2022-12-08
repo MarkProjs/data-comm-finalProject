@@ -3,6 +3,8 @@ package com.mycompany.finalproject;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.security.Key;
+
 /**
  *
  * @author Jeremy Tang
@@ -29,4 +31,11 @@ public class PiKeyStoreTest {
         assertTrue(keyStore.getClass() == PiKeyStore.class);
     }
     
+    @Test
+    public void testGetPublicKey() throws Exception {
+        PiKeyStore keyStore = new PiKeyStore("jeremy".toCharArray(), ksPath);
+        Key publicKey = keyStore.getPublicKey("jrmy");
+        assertNotNull(publicKey);
+        assertTrue(publicKey.getAlgorithm().equals("EC"));
+    }
 }
