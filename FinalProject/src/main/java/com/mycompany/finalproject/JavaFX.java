@@ -18,6 +18,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -38,22 +39,22 @@ public class JavaFX extends HBox {
     //mark's tiles
     private Tile markHumidTile;
     private Tile markTempTile;
-    private Tile markDoorBellTile;
-    private Tile markSensorTile;
+    private TextArea markDoorBellTxtA = new TextArea();
+    private TextArea markSensorTxtA = new TextArea();
     private Tile markImageTile;
 
     //Anotnio's tiles
     private Tile antHumidTile;
     private Tile antTempTile;
-    private Tile antDoorBellTile;
-    private Tile antSensorTile;
+    private TextArea antDoorBellTxtA = new TextArea();
+    private TextArea antSensorTxtA = new TextArea();
     private Tile antImageTile;
 
     //Jeremy's tiles
     private Tile jerHumidTile;
     private Tile jerTempTile;
-    private Tile jerDoorBellTile;
-    private Tile jerSensorTile;
+    private TextArea jerDoorBellTxtA = new TextArea();
+    private TextArea jerSensorTxtA = new TextArea();
     private Tile jerImageTile;
 
     public JavaFX() throws IOException {
@@ -157,9 +158,9 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("message");
                 alert.showAndWait();
+                this.threads.startDoorBellThread(markDoorBellTxtA);
                 this.buildScreen();
                 this.threads.startDHTThread(markHumidTile, markTempTile);
-                this.threads.startDoorBellThread(markDoorBellTile);
 //                this.threads.startSenseLEDThread(markSensorTile, markImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
@@ -175,66 +176,83 @@ public class JavaFX extends HBox {
 
     private void buildScreen() throws IOException {
         //create the doorBell Tile
-        //Generate a timestamp
-        markDoorBellTile = TileBuilder.create()
+        markDoorBellTxtA.setEditable(false);
+        markDoorBellTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
+                + "-fx-text-inner-color: #1E90FF;"
+                + "-fx-text-box-border: transparent;");
+        VBox markTxtAVboxDb = new VBox(markDoorBellTxtA);
+        var markDoorBellTile = TileBuilder.create()
                 .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
                 .title("Mark's doorbell tile")
-                .description("Output from external program")
-                .descriptionAlignment(Pos.CENTER_LEFT)
-                .textVisible(true)
+                .graphic(markTxtAVboxDb)
                 .build();
-
-        antDoorBellTile = TileBuilder.create()
-                .skinType(Tile.SkinType.TEXT)
+        
+        antDoorBellTxtA.setEditable(false);
+        antDoorBellTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
+                + "-fx-text-inner-color: #1E90FF;"
+                + "-fx-text-box-border: transparent;");
+        VBox antTxtAVboxDb = new VBox(antDoorBellTxtA);
+        var antDoorBellTile = TileBuilder.create()
+                .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
                 .title("Antonio's doorbell tile")
-                .description("Output from external program")
-                .descriptionAlignment(Pos.CENTER_LEFT)
-                .textVisible(true)
+                .graphic(antTxtAVboxDb)
                 .build();
-
-        jerDoorBellTile = TileBuilder.create()
-                .skinType(Tile.SkinType.TEXT)
+        
+        jerDoorBellTxtA.setEditable(false);
+        jerDoorBellTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
+                + "-fx-text-inner-color: #1E90FF;"
+                + "-fx-text-box-border: transparent;");
+        VBox jerTxtAVboxDb = new VBox(jerDoorBellTxtA);
+        var jerDoorBellTile = TileBuilder.create()
+                .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
                 .title("Jeremy's doorbell tile")
-                .description("Output from external program")
-                .descriptionAlignment(Pos.CENTER_LEFT)
-                .textVisible(true)
+                .graphic(jerTxtAVboxDb)
                 .build();
 
         //create sensor tile
-        markSensorTile = TileBuilder.create()
-                .skinType(Tile.SkinType.TEXT)
+        markSensorTxtA.setEditable(false);
+        markSensorTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
+                + "-fx-text-inner-color: #1E90FF;"
+                + "-fx-text-box-border: transparent;");
+        VBox markTxtAVboxSen = new VBox(markSensorTxtA);
+        var markSensorTile = TileBuilder.create()
+                .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
-                .title("Mark's sensor tile")
-                .description("Output from external program")
-                .descriptionAlignment(Pos.CENTER_LEFT)
-                .textVisible(true)
+                .title("Mark's Sensor tile")
+                .graphic(markTxtAVboxSen)
                 .build();
-
-        antSensorTile = TileBuilder.create()
-                .skinType(Tile.SkinType.TEXT)
+        
+        antSensorTxtA.setEditable(false);
+        antSensorTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
+                + "-fx-text-inner-color: #1E90FF;"
+                + "-fx-text-box-border: transparent;");
+        VBox antTxtAVboxSen = new VBox(antSensorTxtA);
+        var antSensorTile = TileBuilder.create()
+                .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
-                .title("Antonio's sensor tile")
-                .description("Output from external program")
-                .descriptionAlignment(Pos.CENTER_LEFT)
-                .textVisible(true)
+                .title("Antonio's Sensor tile")
+                .graphic(antTxtAVboxSen)
                 .build();
-
-        jerSensorTile = TileBuilder.create()
-                .skinType(Tile.SkinType.TEXT)
+        
+        jerSensorTxtA.setEditable(false);
+        jerSensorTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
+                + "-fx-text-inner-color: #1E90FF;"
+                + "-fx-text-box-border: transparent;");
+        VBox jerTxtAVboxSen = new VBox(jerSensorTxtA);
+        var jerSensorTile = TileBuilder.create()
+                .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
-                .title("Jeremy's Sensor tile")
-                .description("Output from external program")
-                .descriptionAlignment(Pos.CENTER_LEFT)
-                .textVisible(true)
+                .title("Antonio's Sensor tile")
+                .graphic(jerTxtAVboxSen)
                 .build();
 
         //create tempTile

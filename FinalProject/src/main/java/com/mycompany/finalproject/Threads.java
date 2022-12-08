@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
+import javafx.scene.control.TextArea;
 
 /**
  *
@@ -58,7 +59,7 @@ public class Threads {
         dhtThread.start();
     }
     
-    public void startDoorBellThread(Tile doorBellTile) {       
+    public void startDoorBellThread(TextArea doorBellTile) {       
         Thread doorBellThread = new Thread(()-> {
             int count = 1;
             while(running) {
@@ -69,7 +70,6 @@ public class Threads {
                 } catch(InterruptedException e) {
                     System.err.println("DoorBell thread got interrupted. ");
                 }
-                doorBellTile.
                 String text = "";
                 if(count % 25 == 0) {
                     timeStamp = new Date();
