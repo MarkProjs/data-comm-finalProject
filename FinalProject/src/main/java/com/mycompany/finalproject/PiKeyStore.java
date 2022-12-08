@@ -11,6 +11,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.SecretKey;
