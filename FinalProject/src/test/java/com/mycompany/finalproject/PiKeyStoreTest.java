@@ -15,34 +15,40 @@ public class PiKeyStoreTest {
     
     // fields if needed
     String ksPath;
+    char[] ksPw;
+    String ksAlias;
     
     //Constructor for the test class
     public PiKeyStoreTest() {
         // change to own absolute path (required)
         ksPath = "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\keystore\\ECcertif.ks";
+        ksPw = "jeremy".toCharArray();
+        ksAlias = "jrmy";
     } 
-    
+
     @Test
     public void testConstructor() throws Exception {
-        char[] pw = "jeremy".toCharArray();
-        PiKeyStore keyStore = new PiKeyStore(pw, ksPath);
+        PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
+
         assertNotNull(keyStore);
-        assertArrayEquals(pw, keyStore.password);
+        assertArrayEquals(ksPw, keyStore.password);
         assertTrue(keyStore.getClass() == PiKeyStore.class);
     }
-    
+
     @Test
     public void testGetPublicKey() throws Exception {
-        PiKeyStore keyStore = new PiKeyStore("jeremy".toCharArray(), ksPath);
-        Key publicKey = keyStore.getPublicKey("jrmy");
+        PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
+        Key publicKey = keyStore.getPublicKey(ksAlias);
+
         assertNotNull(publicKey);
         assertTrue(publicKey.getAlgorithm().equals("EC"));
     }
 
     @Test
     public void testGetPrivateKey() throws Exception {
-        PiKeyStore keyStore = new PiKeyStore("jeremy".toCharArray(), ksPath);
-        Key privateKey = keyStore.getPrivateKey("jrmy");
+        PiKeyStore keyStore = new PiKeyStore(ksPw, ksPath);
+        Key privateKey = keyStore.getPrivateKey(ksAlias);
+
         assertNotNull(privateKey);
         assertTrue(privateKey.getAlgorithm().equals("EC"));
     }
