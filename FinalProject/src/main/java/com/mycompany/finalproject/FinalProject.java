@@ -17,7 +17,7 @@ public class FinalProject extends Application{
     
     @Override
     public void start(Stage stage)throws IOException {
-        var scene = new Scene(new JavaFX(), 1750, 900);
+        var scene = new Scene(new JavaFX(), 1750, 1000);
         FinalProject.theStage = stage;
         
         //set the active scene
