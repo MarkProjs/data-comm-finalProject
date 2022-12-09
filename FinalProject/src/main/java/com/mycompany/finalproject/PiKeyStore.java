@@ -18,11 +18,13 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
+import java.util.Enumeration;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -84,9 +86,9 @@ public class PiKeyStore {
 		return this.ks.getCertificate(publicKeyAlias).getPublicKey();
 	}
 
-	public String getPublicKeyAsString(String publicKeyAlias) throws KeyStoreException{
-		Key publicKey = this.getPublicKey(publicKeyAlias);
-		String keyAsString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+	public String getPublicKeyAsString(String publicKeyAlias) throws KeyStoreException, CertificateEncodingException{
+		// Key publicKey = this.getPublicKey(publicKeyAlias);
+		String keyAsString = Base64.getEncoder().encodeToString(this.ks.getCertificate(publicKeyAlias).getEncoded());
 		return keyAsString;
 	}
 
@@ -181,5 +183,9 @@ public class PiKeyStore {
 		try (FileOutputStream fos = new FileOutputStream(path)) {
 			ks.store(fos, this.password);
 		}
+	}
+
+	public Enumeration<String> getAliases() throws KeyStoreException {
+		return this.ks.aliases();
 	}
 }

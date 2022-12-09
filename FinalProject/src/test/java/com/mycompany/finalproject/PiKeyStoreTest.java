@@ -67,7 +67,14 @@ public class PiKeyStoreTest {
 
     @Test
     public void testSavePublicKey() throws Exception {
+        PiKeyStore keyStore = new PiKeyStore(ksPw, "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\test\\java\\com\\mycompany\\finalproject\\ECcertif.ks");
+        PiKeyStore newKeyStore = new PiKeyStore("test1234".toCharArray(), "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\test\\java\\com\\mycompany\\finalproject\\Testcertif.ks");
+        String publicKeyAsString = newKeyStore.getPublicKeyAsString("TEST");
+        
+        keyStore.savePublicKey("TEST", publicKeyAsString);
+        String publicKeyAsString2 = keyStore.getPublicKeyAsString("TEST");
 
+        assertEquals(publicKeyAsString, publicKeyAsString2);
     }
 
     @Test
