@@ -100,12 +100,6 @@ public class JavaFX extends HBox {
             actiontarget.setText("Signing in...");
             try {
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
-                this.mqtt.getData("project/mark", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
-                this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
-                this.mqtt.connectClient();
-
-                this.mqtt.subscribe("project/mark");
-                this.mqtt.subscribe("project/antonio");
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
@@ -164,6 +158,11 @@ public class JavaFX extends HBox {
                 alert.setContentText("message");
                 alert.showAndWait();
                 this.buildScreen();
+                this.mqtt.getData("project/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
+                this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
+                this.mqtt.connectClient();
+                this.mqtt.subscribe("project/jeremy");
+                this.mqtt.subscribe("project/antonio");
                 this.threads.startDoorBellThread(markDoorBellTxtA);
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);

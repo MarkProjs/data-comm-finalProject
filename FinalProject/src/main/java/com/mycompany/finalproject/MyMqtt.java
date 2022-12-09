@@ -29,6 +29,8 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 import java.util.Base64;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -138,7 +140,7 @@ public class MyMqtt {
                     imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
                 } catch(IOException e){
                     System.out.println("Something is wrong in the ImageIO.read method");
-                }
+                } 
             }
         });    
     }
