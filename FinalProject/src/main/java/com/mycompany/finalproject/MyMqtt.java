@@ -108,7 +108,6 @@ public class MyMqtt {
             if (topic.equals(publish.getTopic().toString())) {
                 messageText = UTF_8.decode(publish.getPayload().get()).toString();
             }
-            disconnect();
         });    
     }
 

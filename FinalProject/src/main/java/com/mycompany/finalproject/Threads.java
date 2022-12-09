@@ -125,32 +125,41 @@ public class Threads {
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
             
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
                 }
-                
                 mqtt.getData(topic);
                 try {
-                    JSONObject json = new JSONObject(mqtt.getMessageText());
-                    //making the image appear
-                    String imageString = json.getString("image");
-                    byte[] imageByteArray = imageString.getBytes();
-                    ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
-                    BufferedImage bImage = ImageIO.read(bis);
-                    ImageIO.write(bImage, "png", new File("src/main/resources/images/"+topic+".png"));
-                    imageTile.setImage(new Image(this.getClass().getResourceAsStream(topic+".png")));
-                    //getting the values
-                    doorbellTxtA.setText(json.getString("doorbell"));
-                    sensorTxtA.setText(json.getString("sensor"));
-                    humidTile.setValue(json.getDouble("humidity"));
-                    tempTile.setValue(json.getDouble("temperature"));
+                    System.out.println(mqtt.getMessageText());
+                    if (mqtt.getMessageText() == null) {
+                        imageTile.setImage(new Image(this.getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")));
+                        doorbellTxtA.setText("Doorbell is off");
+                        sensorTxtA.setText("Sensor is off");
+                        humidTile.setValue(0.0);
+                        tempTile.setValue(0.0);
+                    }
+                    else {
+                        JSONObject json = new JSONObject(mqtt.getMessageText());
+                        //making the image appear
+                        String imageString = json.getString("image");
+                        byte[] imageByteArray = imageString.getBytes();
+                        ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
+                        BufferedImage bImage = ImageIO.read(bis);
+                        ImageIO.write(bImage, "png", new File("src/main/resources/images/"+topic+".png"));
+                        imageTile.setImage(new Image(this.getClass().getResourceAsStream(topic+".png")));
+                        //getting the values
+                        doorbellTxtA.setText(json.getString("doorbell"));
+                        sensorTxtA.setText(json.getString("sensor"));
+                        humidTile.setValue(json.getDouble("humidity"));
+                        tempTile.setValue(json.getDouble("temperature"));
+                    }
+                    
 
                 }catch(IOException e) {
                     System.out.println("Something wrong when changing the image.");
                 }
-                
             }
         });
         subscribeThread.start();
@@ -161,7 +170,7 @@ public class Threads {
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(6000);
             
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
@@ -170,7 +179,7 @@ public class Threads {
                 try {
                     //get the image to convert to string
                     
-                    File fi = new File("data-comm-final-project/FinalProject/src/main/resources/defaultImage.png");
+                    File fi = new File("FinalProject/src/main/resources/defaultImage/sunny-clip-art.png");
                     byte[] fileContent = Files.readAllBytes(fi.toPath());
                     String imageString = new String(fileContent);
 

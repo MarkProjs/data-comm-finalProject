@@ -165,7 +165,7 @@ public class JavaFX extends HBox {
                 this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
                 this.threads.startPublishThread(mqtt, "project/mark", markDoorBellTxtA, markSensorTxtA, markHumidTile, markTempTile, markImageTile);
                 this.threads.getMessageThread(mqtt, "project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
-                this.threads.getMessageThread(mqtt, "porject/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
+                // this.threads.getMessageThread(mqtt, "project/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
