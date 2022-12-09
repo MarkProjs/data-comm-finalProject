@@ -12,11 +12,10 @@ public class testMqtt {
     
     public static void main(String[] args) {
         MyMqtt hiveMq = MyMqtt.connectMqtt();
+        // hiveMq.getData("testSub/test/topic");
         hiveMq.connectClient();
         hiveMq.subscribe("testSub/test/topic");
-        hiveMq.getData("testSub/test/topic");
         hiveMq.publish("testSub/test/topic", "Test publish and receive message");
-        System.out.println(hiveMq.getMessageText());
           
     }
 }

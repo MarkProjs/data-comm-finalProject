@@ -47,7 +47,7 @@ public class JavaFX extends HBox {
     private Tile antHumidTile;
     private Tile antTempTile;
     private final TextArea antDoorBellTxtA = new TextArea();
-    private final TextArea antSensorTxtA;
+    private final TextArea antSensorTxtA= new TextArea();
     private Tile antImageTile;
 
     //Jeremy's tiles
@@ -58,7 +58,6 @@ public class JavaFX extends HBox {
     private Tile jerImageTile;
 
     public JavaFX() throws IOException {
-        this.antSensorTxtA = new TextArea();
         threads = new Threads();
 
         //Build the screen
@@ -101,7 +100,12 @@ public class JavaFX extends HBox {
             actiontarget.setText("Signing in...");
             try {
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
+                this.mqtt.getData("project/mark", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
+                this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
                 this.mqtt.connectClient();
+
+                this.mqtt.subscribe("project/jeremy");
+                this.mqtt.subscribe("project/antonio");
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
@@ -164,8 +168,6 @@ public class JavaFX extends HBox {
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
                 this.threads.startPublishThread(mqtt, "project/mark", markDoorBellTxtA, markSensorTxtA, markHumidTile, markTempTile, markImageTile);
-                this.threads.getMessageThread(mqtt, "project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
-                // this.threads.getMessageThread(mqtt, "project/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);
@@ -255,7 +257,7 @@ public class JavaFX extends HBox {
                 .skinType(Tile.SkinType.CUSTOM)
                 .prefSize(350, 300)
                 .textSize(Tile.TextSize.BIGGER)
-                .title("Antonio's Sensor tile")
+                .title("Jeremy's Sensor tile")
                 .graphic(jerTxtAVboxSen)
                 .build();
 
@@ -267,6 +269,7 @@ public class JavaFX extends HBox {
                 .unit("C")
                 .threshold(75)
                 .build();
+        markTempTile.setValue(0.0);
 
         antTempTile = TileBuilder.create()
                 .skinType(Tile.SkinType.GAUGE)
@@ -275,6 +278,7 @@ public class JavaFX extends HBox {
                 .unit("C")
                 .threshold(75)
                 .build();
+        antTempTile.setValue(0.0);
 
         jerTempTile = TileBuilder.create()
                 .skinType(Tile.SkinType.GAUGE)
@@ -283,7 +287,7 @@ public class JavaFX extends HBox {
                 .unit("C")
                 .threshold(75)
                 .build();
-
+        jerTempTile.setValue(0.0);
         //Create humidTile
         markHumidTile = TileBuilder.create()
                 .skinType(Tile.SkinType.PERCENTAGE)
@@ -292,6 +296,7 @@ public class JavaFX extends HBox {
                 .unit("g.m-3")
                 .maxValue(60)
                 .build();
+        markHumidTile.setValue(0.0);
 
         antHumidTile = TileBuilder.create()
                 .skinType(Tile.SkinType.PERCENTAGE)
@@ -300,6 +305,7 @@ public class JavaFX extends HBox {
                 .unit("g.m-3")
                 .maxValue(60)
                 .build();
+        antHumidTile.setValue(0.0);
 
         jerHumidTile = TileBuilder.create()
                 .skinType(Tile.SkinType.PERCENTAGE)
@@ -309,6 +315,7 @@ public class JavaFX extends HBox {
                 .maxValue(60)
                 .build();
 
+        jerHumidTile.setValue(0.0);
         //setup the image tile
         markImageTile = TileBuilder.create()
                 .skinType(Tile.SkinType.IMAGE)
@@ -329,7 +336,6 @@ public class JavaFX extends HBox {
                 .skinType(Tile.SkinType.IMAGE)
                 .prefSize(350, 300)
                 .title("Jeremy's Image Tile")
-                .image(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png"))))
                 .imageMask(Tile.ImageMask.RECTANGULAR)
                 .build();
         

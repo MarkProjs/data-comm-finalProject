@@ -6,17 +6,16 @@ package com.mycompany.finalproject;
 
 import eu.hansolo.tilesfx.Tile;
 
-import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import org.json.*;
-import java.nio.file.Files;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.awt.image.*;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -119,58 +118,12 @@ public class Threads {
         });        
         senseLEDThread.start();
     }
-
-    public void getMessageThread(MyMqtt mqtt, String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
-        Thread subscribeThread = new Thread(()->{
-            while(running) {
-                try{
-                    //Delay thread for 2 seconds
-                    Thread.sleep(5000);
-            
-                }catch(InterruptedException e) {
-                    System.err.println("SenseLED thread got interrupted. ");
-                }
-                mqtt.getData(topic);
-                try {
-                    System.out.println(mqtt.getMessageText());
-                    if (mqtt.getMessageText() == null) {
-                        imageTile.setImage(new Image(this.getClass().getResourceAsStream("/defaultImage/sunny-clip-art.png")));
-                        doorbellTxtA.setText("Doorbell is off");
-                        sensorTxtA.setText("Sensor is off");
-                        humidTile.setValue(0.0);
-                        tempTile.setValue(0.0);
-                    }
-                    else {
-                        JSONObject json = new JSONObject(mqtt.getMessageText());
-                        //making the image appear
-                        String imageString = json.getString("image");
-                        byte[] imageByteArray = imageString.getBytes();
-                        ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
-                        BufferedImage bImage = ImageIO.read(bis);
-                        ImageIO.write(bImage, "png", new File("src/main/resources/images/"+topic+".png"));
-                        imageTile.setImage(new Image(this.getClass().getResourceAsStream(topic+".png")));
-                        //getting the values
-                        doorbellTxtA.setText(json.getString("doorbell"));
-                        sensorTxtA.setText(json.getString("sensor"));
-                        humidTile.setValue(json.getDouble("humidity"));
-                        tempTile.setValue(json.getDouble("temperature"));
-                    }
-                    
-
-                }catch(IOException e) {
-                    System.out.println("Something wrong when changing the image.");
-                }
-            }
-        });
-        subscribeThread.start();
-    }
-
     public void startPublishThread(MyMqtt mqtt, String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
         Thread publishThread = new Thread(()->{
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(6000);
+                    Thread.sleep(10000);
             
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
@@ -179,20 +132,23 @@ public class Threads {
                 try {
                     //get the image to convert to string
                     
-                    File fi = new File("FinalProject/src/main/resources/defaultImage/sunny-clip-art.png");
-                    byte[] fileContent = Files.readAllBytes(fi.toPath());
-                    String imageString = new String(fileContent);
-
-                    //do the json stringified
-                    String message = new JSONObject()
-                                .put("doorbell", doorbellTxtA.getText())
-                                .put("sensor", sensorTxtA.getText())
-                                .put("humidity", humidTile.getValue())
-                                .put("temperature", tempTile.getValue())
-                                .put("image", imageString)
-                                .toString();
-                    mqtt.subscribe(topic);
-                    mqtt.publish(topic, message);
+                    File fi = new File("./FinalProject/src/main/resources/defaultImage/sunny-clip-art.png");
+                    try (FileInputStream fileInputReader = new FileInputStream(fi)) {
+											byte[] fileContent = new byte[(int)fi.length()];
+											fileInputReader.read(fileContent);
+											String imageString = Base64.getEncoder().encodeToString(fileContent);
+											//do the json stringified
+											String message = new JSONObject()
+											            .put("doorbell", doorbellTxtA.getText())
+											            .put("sensor", sensorTxtA.getText())
+											            .put("humidity", humidTile.getValue())
+											            .put("temperature", tempTile.getValue())
+											            .put("image", imageString)
+											            .toString();
+											mqtt.publish(topic, message);
+										} catch (JSONException e) {
+											e.printStackTrace();
+										}
                 } catch(IOException e) {
                     System.out.println("The path to the image does not exist");
                 }

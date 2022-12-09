@@ -11,12 +11,26 @@ package com.mycompany.finalproject;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 
+import eu.hansolo.tilesfx.Tile;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+
 import static com.hivemq.client.mqtt.MqttGlobalPublishFilter.ALL;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.Scanner;
+
+import javax.imageio.ImageIO;
+
+import java.util.Base64;
+import org.json.JSONObject;
+
 
 
 public class MyMqtt {
@@ -102,11 +116,27 @@ public class MyMqtt {
                 .send();
     }
     
-    public void getData(String topic) {
+    public void getData(String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
         // set a callback that is called when a message is received (using the async API style)
         client.toAsync().publishes(ALL, publish -> { 
             if (topic.equals(publish.getTopic().toString())) {
                 messageText = UTF_8.decode(publish.getPayload().get()).toString();
+                try {
+                    JSONObject json = new JSONObject(messageText);
+                    // get the image
+                    byte[] decodeArray = Base64.getDecoder().decode(json.getString("image"));
+                    ByteArrayInputStream bis = new ByteArrayInputStream(decodeArray);
+                    BufferedImage bImage = ImageIO.read(bis);
+                    ImageIO.write(bImage, "png", new File("E:/Data Communication/data-comm-final-project/FinalProject/src/main/resources/defaultImage/newImage.png"));
+                    //getting the values
+                    doorbellTxtA.setText(json.getString("doorbell"));
+                    sensorTxtA.setText(json.getString("sensor"));
+                    humidTile.setValue(json.getDouble("humidity"));
+                    tempTile.setValue(json.getDouble("temperature"));
+                    imageTile.setImage(new Image(this.getClass().getResourceAsStream("/images/newImage.png")));
+                } catch(IOException e){
+                    System.out.println("Something is wrong in the ImageIO.read method");
+                }
             }
         });    
     }
