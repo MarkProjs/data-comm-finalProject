@@ -104,7 +104,7 @@ public class JavaFX extends HBox {
                 this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
                 this.mqtt.connectClient();
 
-                this.mqtt.subscribe("project/jeremy");
+                this.mqtt.subscribe("project/mark");
                 this.mqtt.subscribe("project/antonio");
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");

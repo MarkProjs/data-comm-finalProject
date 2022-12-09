@@ -131,9 +131,11 @@ public class MyMqtt {
                     //getting the values
                     doorbellTxtA.setText(json.getString("doorbell"));
                     sensorTxtA.setText(json.getString("sensor"));
+                    System.out.println("Before the humidTile val");
                     humidTile.setValue(json.getDouble("humidity"));
+                    System.out.println("after the humidTile val");
                     tempTile.setValue(json.getDouble("temperature"));
-                    imageTile.setImage(new Image(this.getClass().getResourceAsStream("/images/newImage.png")));
+                    imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
                 } catch(IOException e){
                     System.out.println("Something is wrong in the ImageIO.read method");
                 }
