@@ -146,6 +146,36 @@ public class PiKeyStore {
         
         return signature;
     }
+    
+    
+    /**
+     * Method for verifying digital signature.
+     */
+    boolean verifySignature(byte[] signature, String publicKeyAlias, String message) 
+            throws NoSuchAlgorithmException, NoSuchProviderException, 
+            InvalidKeyException, UnsupportedEncodingException, SignatureException {
+        
+        //Create an instance of the signature scheme for the given signature algorithm
+        Signature sig = Signature.getInstance(hashingAlgo, "SunEC");
+        
+        //Initialize the signature verification scheme.
+        sig.initVerify((PublicKey) this.getPrivateKey(publicKeyAlias));
+        
+        //Compute the signature.
+        sig.update(message.getBytes("UTF-8"));
+        
+        //Verify the signature.
+        boolean validSignature = sig.verify(signature);
+        
+        if(validSignature) {
+            System.out.println("\nSignature is valid");
+        } else {
+            System.out.println("\nSignature is NOT valid!!!");
+        }
+        
+        return validSignature;
+    }
+
 
 	public void storeKeyStore(String path) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
 		try (FileOutputStream fos = new FileOutputStream(path)) {
