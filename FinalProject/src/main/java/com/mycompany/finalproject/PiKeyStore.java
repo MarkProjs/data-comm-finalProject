@@ -6,12 +6,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -24,9 +30,11 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class PiKeyStore {
-	final String hashingAlgo = "SHA256withECDSA";
-	KeyStore ks;
-	char[] password;
+	private final String hashingAlgo = "SHA256withECDSA";
+	private KeyStore ks;
+	private char[] password;
+	private Key publicKey;
+	private Key privateKey;
 
 	public PiKeyStore(char[] password, String path) {
 		if (path.equals("")) {
@@ -36,6 +44,8 @@ public class PiKeyStore {
 		try {
 			this.ks = KeyStore.getInstance("PKCS12");
 			loadKeyStore(path);
+			this.publicKey = this.getPublicKey(this.ks.aliases().nextElement());
+			this.privateKey = this.getPrivateKey(this.ks.aliases().nextElement());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,7 +69,7 @@ public class PiKeyStore {
 		}
 	}
 
-	public Key getPrivateKey(String privateKeyAlias) {
+	private Key getPrivateKey(String privateKeyAlias) {
 		KeyStore.ProtectionParameter entryPassword = new KeyStore.PasswordProtection(this.password);
 		KeyStore.PrivateKeyEntry pkEntry = null;
 		try {
@@ -70,7 +80,7 @@ public class PiKeyStore {
 		return pkEntry.getPrivateKey();
 	}
 	
-	public Key getPublicKey(String publicKeyAlias) throws KeyStoreException {
+	private Key getPublicKey(String publicKeyAlias) throws KeyStoreException {
 		return this.ks.getCertificate(publicKeyAlias).getPublicKey();
 	}
 
@@ -116,6 +126,26 @@ public class PiKeyStore {
 		var hash = secret.getEncoded();
 		return hash;
 	}
+
+	/**
+     * Method for generating digital signature.
+     */
+    byte[] generateSignature (String message) 
+            throws NoSuchAlgorithmException, NoSuchProviderException, 
+            InvalidKeyException, UnsupportedEncodingException, SignatureException {
+        
+        //Create an instance of the signature scheme for the given signature algorithm
+        Signature sig = Signature.getInstance(hashingAlgo, "SunEC");
+        
+        //Initialize the signature scheme
+        sig.initSign((PrivateKey) this.privateKey);
+        
+        //Compute the signature
+        sig.update(message.getBytes("UTF-8"));
+        byte[] signature = sig.sign();
+        
+        return signature;
+    }
 
 	public void storeKeyStore(String path) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
 		try (FileOutputStream fos = new FileOutputStream(path)) {
