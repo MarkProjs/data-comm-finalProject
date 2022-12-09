@@ -152,16 +152,17 @@ public class PiKeyStore {
     
     /**
      * Method for verifying digital signature.
+     * @throws KeyStoreException
      */
     boolean verifySignature(byte[] signature, String publicKeyAlias, String message) 
             throws NoSuchAlgorithmException, NoSuchProviderException, 
-            InvalidKeyException, UnsupportedEncodingException, SignatureException {
+            InvalidKeyException, UnsupportedEncodingException, SignatureException, KeyStoreException {
         
         //Create an instance of the signature scheme for the given signature algorithm
         Signature sig = Signature.getInstance(hashingAlgo, "SunEC");
         
         //Initialize the signature verification scheme.
-        sig.initVerify((PublicKey) this.getPrivateKey(publicKeyAlias));
+        sig.initVerify((PublicKey) this.getPublicKey(publicKeyAlias));
         
         //Compute the signature.
         sig.update(message.getBytes("UTF-8"));

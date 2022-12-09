@@ -17,6 +17,7 @@ public class PiKeyStoreTest {
     String ksPath;
     char[] ksPw;
     String ksAlias;
+    String relPath = System.getProperty("user.dir")+"\\src\\test\\java\\com\\mycompany\\finalproject\\";
 
     // Constructor for the test class
     public PiKeyStoreTest() {
@@ -67,14 +68,28 @@ public class PiKeyStoreTest {
 
     @Test
     public void testSavePublicKey() throws Exception {
-        PiKeyStore keyStore = new PiKeyStore(ksPw, "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\test\\java\\com\\mycompany\\finalproject\\ECcertif.ks");
-        PiKeyStore newKeyStore = new PiKeyStore("test1234".toCharArray(), "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\test\\java\\com\\mycompany\\finalproject\\Testcertif.ks");
+        PiKeyStore keyStore = new PiKeyStore(ksPw, relPath+"ECcertif.ks");
+        PiKeyStore newKeyStore = new PiKeyStore("test1234".toCharArray(), relPath+"Testcertif.ks");
         String publicKeyAsString = newKeyStore.getPublicKeyAsString("TEST");
         
         keyStore.savePublicKey("TEST", publicKeyAsString);
         String publicKeyAsString2 = keyStore.getPublicKeyAsString("TEST");
 
         assertEquals(publicKeyAsString, publicKeyAsString2);
+    }
+
+    @Test
+    public void testDigitalSignature() throws Exception {
+        PiKeyStore keyStore = new PiKeyStore(ksPw, "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\test\\java\\com\\mycompany\\finalproject\\ECcertif.ks");
+        PiKeyStore newKeyStore = new PiKeyStore("test1234".toCharArray(), "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\test\\java\\com\\mycompany\\finalproject\\Testcertif.ks");
+        String x = keyStore.getPublicKeyAsString(ksAlias);
+        newKeyStore.savePublicKey(ksAlias, x);
+        
+        String message = "hello this is a message";
+        var sig = keyStore.generateSignature(message);
+        var isValid = newKeyStore.verifySignature(sig, ksAlias, message);
+        
+        assertTrue(isValid);
     }
 
     @Test
