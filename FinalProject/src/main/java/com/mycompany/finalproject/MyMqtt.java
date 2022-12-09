@@ -129,13 +129,11 @@ public class MyMqtt {
                     byte[] decodeArray = Base64.getDecoder().decode(json.getString("image"));
                     ByteArrayInputStream bis = new ByteArrayInputStream(decodeArray);
                     BufferedImage bImage = ImageIO.read(bis);
-                    ImageIO.write(bImage, "png", new File("E:/Data Communication/data-comm-final-project/FinalProject/src/main/resources/defaultImage/newImage.png"));
+                    ImageIO.write(bImage, "png", new File("./FinalProject/src/main/resources/defaultImage/newImage.png"));
                     //getting the values
                     doorbellTxtA.setText(json.getString("doorbell"));
                     sensorTxtA.setText(json.getString("sensor"));
-                    System.out.println("Before the humidTile val");
                     humidTile.setValue(json.getDouble("humidity"));
-                    System.out.println("after the humidTile val");
                     tempTile.setValue(json.getDouble("temperature"));
                     imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
                 } catch(IOException e){

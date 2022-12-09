@@ -131,7 +131,6 @@ public class Threads {
 
                 try {
                     //get the image to convert to string
-                    
                     File fi = new File("./FinalProject/src/main/resources/defaultImage/sunny-clip-art.png");
                     try (FileInputStream fileInputReader = new FileInputStream(fi)) {
 											byte[] fileContent = new byte[(int)fi.length()];
