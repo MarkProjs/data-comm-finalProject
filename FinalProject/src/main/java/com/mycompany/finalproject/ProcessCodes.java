@@ -88,15 +88,16 @@ public class ProcessCodes {
         
             // Shutdown Pi4J
             pi4j.shutdown();
-        });
+        });    
         
         getImage.start();
+        
         try {
             getImage.join();
-            Thread.sleep(1000);
+            Thread.sleep(100);
             imageTile.setImage(new Image(this.getClass().getResourceAsStream("/images/picTaken.png")));
         }catch (InterruptedException e) {
-            System.out.println("Somthing went wrong when taking the image");
+                System.out.println("Somthing went wrong when taking the image");
         }
         
     }

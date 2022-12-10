@@ -30,18 +30,20 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>16-ea+7</version>
+            <classifier>win</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
             <version>16-ea+7</version>
+            <classifier>win</classifier>
         </dependency>
         
          <!-- TilesFX library -->
         <dependency>
             <groupId>eu.hansolo</groupId>
             <artifactId>tilesfx</artifactId>
-            <version>11.13</version>
+            <version>16.0.1</version>
         </dependency> 
         
         <!-- Needed for JUnit 5 tests -->
@@ -63,7 +65,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -89,13 +91,28 @@
             <artifactId>pi4j-plugin-pigpio</artifactId>
             <version>${pi4j.version}</version>
         </dependency>
+        
+        <!--JSON Object-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220924</version>
+        </dependency>
+        
+        <!--IMAGE DEPENDENCIES-->
+        <dependency>
+            <groupId>com.jtransc</groupId>
+            <artifactId>jtransc-rt</artifactId>
+            <version>0.6.8</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <release>11</release>
                 </configuration>
@@ -134,4 +151,43 @@
             </plugin>
         </plugins>
     </build>
+
+
+    <dependencyManagement>
+    
+
+        <dependencies>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-graphics</artifactId>
+                <version>12.0.1</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-media</artifactId>
+                <version>12.0.1</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-base</artifactId>
+                <version>12.0.1</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.32</version>
+            </dependency>
+
+        
+
+        </dependencies>
+
+    </dependencyManagement>
 </project>
