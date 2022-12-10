@@ -21,6 +21,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
+import java.security.cert.CertificateEncodingException;
 import java.awt.image.*;
 
 /**
@@ -213,6 +214,12 @@ public class Threads {
                 }
 
                 try {
+                    String keyToSend = this.keystore.getPublicKeyAsString(this.keystore.getAliases().nextElement());
+                    String alias = this.keystore.getAliases().nextElement();
+                    var firstPub = new JSONObject();
+                    firstPub.put("alias", alias).put("key", keyToSend);
+                    this.mqtt.publishRetain(this.topic, firstPub.toString());
+                    System.out.println("key sent");
                     // get the image to convert to string
                     File fi = new File(
                             "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\main\\resources\\defaultImage\\sunny-clip-art.png");
@@ -235,6 +242,12 @@ public class Threads {
                     }
                 } catch (IOException e) {
                     System.out.println("The path to the image does not exist");
+                } catch (KeyStoreException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (CertificateEncodingException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
                 }
             }
         });
