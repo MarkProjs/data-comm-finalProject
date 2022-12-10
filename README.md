@@ -15,8 +15,8 @@
     - ProccessCode
     - Component
 ## Before running the project:
-1. If path in line 132 of MyMqtt.java does not work properly, change it to an absolute path until it reaches defaultImage/newImage.png
-2. If path in line 134 of Threads.java does not work properly, change it to an absolute path until it reaches defaultImage/sunny-clip-art.png
+1. If path in line 184 of MyMqtt.java does not work properly, change it to an absolute path until it reaches defaultImage/newImage.png
+2. If path in line 225 of Threads.java does not work properly, change it to an absolute path until it reaches defaultImage/sunny-clip-art.png
 
 ## To run the project:
 1. Go to the terminal and locate the project. Once in the project, type "mvn clean package", then press Enter.
