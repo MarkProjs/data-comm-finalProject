@@ -30,3 +30,9 @@ https://gitlab.com/jeremytang03/data-comm-final-project
 - Mark Agluba 
 - Jeremy Tang, 
 - Antonio Simonelli
+
+## MQTT Credentials
+username: asimonelli password: dawson1234
+username: MarkisAwesome password: dawson1234
+username: jeremy password: tang1234
+
