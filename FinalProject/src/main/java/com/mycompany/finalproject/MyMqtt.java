@@ -197,8 +197,9 @@ public class MyMqtt {
                     }
                 } catch (IOException e) {
                     System.out.println("Something is wrong in the ImageIO.read method");
+                } catch (NullPointerException e) {
                 } catch (Exception e) {
-                    System.out.println("Something else other than ImageIO is wrong");
+                    System.out.println("Something else is wrong");
                     e.printStackTrace();
                 }
             }
