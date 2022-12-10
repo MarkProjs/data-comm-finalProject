@@ -105,7 +105,7 @@ public class MyMqtt {
     }
 
     public void subscribe(String topic) {
-        // subscribe to the topic "my/test/topic"
+        // subscribe to the topic
         client.subscribeWith()
                 .topicFilter(topic)
                 .qos(MqttQos.EXACTLY_ONCE)
@@ -113,7 +113,7 @@ public class MyMqtt {
     }
 
     public void publish(String topic, String message) {
-        // publish a message to the topic "my/test/topic"
+        // publish a message to the topic
         client.publishWith()
                 .topic(topic)
                 .payload(UTF_8.encode(message))
@@ -122,7 +122,7 @@ public class MyMqtt {
     }
 
     public void publishRetain(String topic, String message) {
-        // publish a message to the topic "my/test/topic"
+        // publish a retained message to the topic
         client.publishWith()
                 .topic(topic)
                 .payload(UTF_8.encode(message))
@@ -139,14 +139,19 @@ public class MyMqtt {
             if (topic.equals(publish.getTopic().toString())) {
                 messageText = UTF_8.decode(publish.getPayload().get()).toString();
                 try {
+                    // character | is used to indicate alias and signature that comes with message containing data
                     if (messageText.lastIndexOf('|') == -1) {
+                        // not data, but public key + alias
                         JSONObject json = new JSONObject(messageText);
                         if (json.has("key")) {
                             var key = json.getString("key");
                             var alias = json.getString("alias");
+                            // if alias is not in keystore
                             if (!this.keystore.getKeyStore().containsAlias(alias)) {
+                                // save new key
                                 this.keystore.savePublicKey(alias, key);
                                 System.out.println("saved key");
+                                // send back our key, since we didn't have theirs, they probably don't have ours 
                                 String keyToSend = keystore.getPublicKeyAsString(keystore.getAliases().nextElement());
                                 String ownAlias = keystore.getAliases().nextElement();
                                 var firstPub = new JSONObject();
@@ -158,6 +163,7 @@ public class MyMqtt {
                             }
                         }
                     } else {
+                        // contains character | and therefore is signed data
                         System.out.println("data obj and not key");
                         String message = messageText.substring(0, messageText.indexOf('|'));
                         String alias = messageText.substring(messageText.indexOf('|') + 1,
@@ -165,6 +171,7 @@ public class MyMqtt {
                         String signature = messageText.substring(messageText.lastIndexOf('|') + 1,
                                 messageText.length());
                         byte[] sig = Base64.getDecoder().decode(signature);
+                        // verify signature
                         if (this.keystore.verifySignature(sig, alias, message)) {
                             JSONObject json = new JSONObject(message);
                             // get the image

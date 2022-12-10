@@ -113,6 +113,7 @@ public class Threads {
                     text = "buzzer is off";
                 }
                 if (data.has("doorbell")) {
+                    // only send if data changed
                     if (!data.get("doorbell").equals(text)) {
                         data.put("doorbell", text);
                         try {
@@ -162,6 +163,7 @@ public class Threads {
                     text = "led is off";
                 }
                 if (data.has("sensor")) {
+                    // only send if data changed
                     if (!data.get("sensor").equals(text)) {
                         data.put("sensor", text);
                         try {
@@ -189,6 +191,7 @@ public class Threads {
     public void startPublishThread(TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile,
             Tile imageTile) {
         try {
+            // first publication, send public key
             String keyToSend = this.keystore.getPublicKeyAsString(this.keystore.getAliases().nextElement());
             String alias = this.keystore.getAliases().nextElement();
             var firstPub = new JSONObject();
@@ -217,7 +220,6 @@ public class Threads {
                         byte[] fileContent = new byte[(int) fi.length()];
                         fileInputReader.read(fileContent);
                         String imageString = Base64.getEncoder().encodeToString(fileContent);
-                        // do the json stringified
                         try {
                             String message = data
                                     .put("image", imageString)
@@ -240,6 +242,7 @@ public class Threads {
 
     }
 
+    // adds signature and alias to message
     private String addSignature(String message) throws KeyStoreException, InvalidKeyException, NoSuchAlgorithmException,
             NoSuchProviderException, UnsupportedEncodingException, SignatureException {
         String alias = this.keystore.getAliases().nextElement();

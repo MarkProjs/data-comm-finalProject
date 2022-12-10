@@ -105,6 +105,7 @@ public class JavaFX extends HBox {
                                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
                                 this.currentUser = userTextField.getText();
                                 this.elems = this.buildTiles();
+                                // checks which user is signed in to subscribe to the other users
                                 if (this.currentUser.equals("MarkisAwesome")) {
                                         this.mqtt.getData("project/jeremy", jerDoorBellTxtA, jerSensorTxtA,
                                                         jerHumidTile, jerTempTile, jerImageTile);
@@ -191,6 +192,7 @@ public class JavaFX extends HBox {
                                 this.display();
                                 this.threads.setMqtt(mqtt);
                                 this.threads.setKeyStore(this.keystore);
+                                // check current user to publish on the right topic
                                 if (this.currentUser.equals("MarkisAwesome")) {
                                         this.threads.setTopic("project/mark");
                                         this.threads.startPublishThread(markDoorBellTxtA, markSensorTxtA, markHumidTile,
@@ -225,6 +227,7 @@ public class JavaFX extends HBox {
                 this.getChildren().add(grid);
         }
 
+        // sets up tiles needed 
         private VBox buildTiles() throws IOException {
                 // create the doorBell Tile
                 markDoorBellTxtA.setEditable(false);
@@ -407,6 +410,7 @@ public class JavaFX extends HBox {
                 return elems;
         }
 
+        // displays dashboard
         private void display() {
                 this.getChildren().clear();
                 // adding to the main screen
