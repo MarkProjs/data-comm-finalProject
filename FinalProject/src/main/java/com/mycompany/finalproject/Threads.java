@@ -129,7 +129,7 @@ public class Threads {
             String alias = keystore.getAliases().nextElement();
             var firstPub = new JSONObject();
             firstPub.put("alias", alias).put("key", keyToSend);
-            mqtt.publish(topic, firstPub.toString());
+            mqtt.publishRetain(topic, firstPub.toString());
             System.out.println("key sent");
 
         } catch (Exception e) {
@@ -139,7 +139,7 @@ public class Threads {
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(8000);
+                    Thread.sleep(10000);
             
                 }catch(InterruptedException e) {
                     System.err.println("publish thread got interrupted. ");
@@ -161,11 +161,10 @@ public class Threads {
 											            .put("humidity", humidTile.getValue())
 											            .put("temperature", tempTile.getValue())
 											            .put("image", imageString)
-                                                        .put("alias", alias)
 											            .toString();
                                                 byte[] signature = keystore.generateSignature(message);
                                                 String signatureString = Base64.getEncoder().encodeToString(signature);
-                                                message += "|" + signatureString;
+                                                message += "|" + alias + "|" + signatureString;
 											    mqtt.publish(topic, message);
                                             } catch (Exception e) {
                                                 e.printStackTrace();

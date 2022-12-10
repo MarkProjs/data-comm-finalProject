@@ -121,6 +121,16 @@ public class MyMqtt {
                 .send();
     }
 
+    public void publishRetain(String topic, String message) {
+        // publish a message to the topic "my/test/topic"
+        client.publishWith()
+                .topic(topic)
+                .payload(UTF_8.encode(message))
+                .retain(true)
+                .qos(MqttQos.EXACTLY_ONCE)
+                .send();
+    }
+
     public void getData(String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile,
             Tile imageTile) {
         // set a callback that is called when a message is received (using the async API
@@ -137,40 +147,59 @@ public class MyMqtt {
                             if (!this.keystore.getKeyStore().containsAlias(alias)) {
                                 this.keystore.savePublicKey(alias, key);
                                 System.out.println("saved key");
+                                String keyToSend = keystore.getPublicKeyAsString(keystore.getAliases().nextElement());
+                                String ownAlias = keystore.getAliases().nextElement();
+                                var firstPub = new JSONObject();
+                                firstPub.put("alias", ownAlias).put("key", keyToSend);
+                                this.publish(topic, firstPub.toString());
+                                System.out.println("sent back own key");
                             } else {
                                 System.out.println("already have this key");
                             }
                         }
                     } else {
                         System.out.println("data obj and not key");
-                        JSONObject json = new JSONObject(messageText);
-                        // get the image
-                        if (json.has("image") && !json.isNull("image")) {
-                            byte[] decodeArray = Base64.getDecoder().decode(json.getString("image"));
-                            ByteArrayInputStream bis = new ByteArrayInputStream(decodeArray);
-                            BufferedImage bImage = ImageIO.read(bis);
-                            ImageIO.write(bImage, "png",
-                                    new File("C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\main\\resources\\defaultImage\\newImage.png"));
-                            imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
-                        }
-                        // getting the values
-                        if (json.has("doorbell")) {
-                            doorbellTxtA.setText(json.getString("doorbell"));
-                        }
-                        if (json.has("sensor")) {
-                            sensorTxtA.setText(json.getString("sensor"));
-                        }
-                        if (json.has("humidity")) {
-                            humidTile.setValue(json.getDouble("humidity"));
-                        }
-                        if (json.has("temperature")) {
-                            tempTile.setValue(json.getDouble("temperature"));
+                        String message = messageText.substring(0, messageText.indexOf('|'));
+                        String alias = messageText.substring(messageText.indexOf('|') + 1,
+                                messageText.lastIndexOf('|'));
+                        String signature = messageText.substring(messageText.lastIndexOf('|') + 1,
+                                messageText.length());
+                        byte[] sig = Base64.getDecoder().decode(signature);
+                        if (this.keystore.verifySignature(sig, alias, message)) {
+                            JSONObject json = new JSONObject(message);
+                            // get the image
+                            if (json.has("image") && !json.isNull("image")) {
+                                byte[] decodeArray = Base64.getDecoder().decode(json.getString("image"));
+                                ByteArrayInputStream bis = new ByteArrayInputStream(decodeArray);
+                                BufferedImage bImage = ImageIO.read(bis);
+                                ImageIO.write(bImage, "png",
+                                        new File(
+                                                "C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\main\\resources\\defaultImage\\newImage.png"));
+                            }
+                            // getting the values
+                            if (json.has("doorbell")) {
+                                doorbellTxtA.setText(json.getString("doorbell"));
+                            }
+                            if (json.has("sensor")) {
+                                sensorTxtA.setText(json.getString("sensor"));
+                            }
+                            if (json.has("humidity")) {
+                                humidTile.setValue(json.getDouble("humidity"));
+                            }
+                            if (json.has("temperature")) {
+                                tempTile.setValue(json.getDouble("temperature"));
+                            }
+                            if (json.has("image") && !json.isNull("image")) {
+                                imageTile.setImage(
+                                        new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
+                            }
                         }
                     }
                 } catch (IOException e) {
                     System.out.println("Something is wrong in the ImageIO.read method");
                 } catch (Exception e) {
                     System.out.println("Something else other than ImageIO is wrong");
+                    e.printStackTrace();
                 }
             }
         });

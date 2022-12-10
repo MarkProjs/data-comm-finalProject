@@ -57,6 +57,8 @@ public class JavaFX extends HBox {
     private final TextArea jerSensorTxtA = new TextArea();
     private Tile jerImageTile;
 
+    private VBox elems;
+
     public JavaFX() throws IOException {
         threads = new Threads();
 
@@ -100,6 +102,7 @@ public class JavaFX extends HBox {
             actiontarget.setText("Signing in...");
             try {
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
+                this.elems = this.buildTiles();
                 this.mqtt.getData("project/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
                 this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
                 this.mqtt.connectClient();
@@ -163,7 +166,7 @@ public class JavaFX extends HBox {
                 alert.setHeaderText(null);
                 alert.setContentText("Successfully loaded keystore");
                 alert.showAndWait();
-                this.buildScreen();
+                this.display();
                 this.threads.startDoorBellThread(markDoorBellTxtA);
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
@@ -180,7 +183,7 @@ public class JavaFX extends HBox {
         this.getChildren().add(grid);
     }
 
-    private void buildScreen() throws IOException {
+    private VBox buildTiles() throws IOException {
         //create the doorBell Tile
         markDoorBellTxtA.setEditable(false);
         markDoorBellTxtA.setStyle("-fx-control-inner-background: #2A2A2A; "
@@ -358,11 +361,14 @@ public class JavaFX extends HBox {
         var column3 = new HBox(jerHumidTile, jerTempTile, jerSensorTile, jerDoorBellTile, jerImageTile);
         var elems = new VBox(column1, column2, column3, exitTile);
 
+        return elems;
+    }
+
+    private void display(){
         this.getChildren().clear();
         //adding to the main screen
-        this.getChildren().add(elems);
+        this.getChildren().add(this.elems);
         this.setSpacing(5);
-
     }
 
     private void endApplication() {
