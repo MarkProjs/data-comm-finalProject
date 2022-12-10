@@ -100,6 +100,11 @@ public class JavaFX extends HBox {
             actiontarget.setText("Signing in...");
             try {
                 this.mqtt = new MyMqtt(userTextField.getText(), pwBox.getText());
+                this.mqtt.getData("project/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
+                this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
+                this.mqtt.connectClient();
+                this.mqtt.subscribe("project/jeremy");
+                this.mqtt.subscribe("project/antonio");
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
@@ -151,22 +156,18 @@ public class JavaFX extends HBox {
 
         btn.setOnAction((e) -> {
             try {
-                // this.keystore = new PiKeyStore(pwBox.getText().toCharArray(), userTextField.getText());
+                this.keystore = new PiKeyStore(pwBox.getText().toCharArray(), userTextField.getText());
+                this.mqtt.setKeyStore(this.keystore);
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("message");
+                alert.setContentText("Successfully loaded keystore");
                 alert.showAndWait();
                 this.buildScreen();
-                this.mqtt.getData("project/jeremy", jerDoorBellTxtA, jerSensorTxtA, jerHumidTile, jerTempTile, jerImageTile);
-                this.mqtt.getData("project/antonio", antDoorBellTxtA, antSensorTxtA, antHumidTile, antTempTile, antImageTile);
-                this.mqtt.connectClient();
-                this.mqtt.subscribe("project/jeremy");
-                this.mqtt.subscribe("project/antonio");
                 this.threads.startDoorBellThread(markDoorBellTxtA);
                 this.threads.startDHTThread(markHumidTile, markTempTile);
                 this.threads.startSenseLEDThread(markSensorTxtA, markImageTile);
-                this.threads.startPublishThread(mqtt, "project/mark", markDoorBellTxtA, markSensorTxtA, markHumidTile, markTempTile, markImageTile);
+                this.threads.startPublishThread(mqtt, "project/jeremy", markDoorBellTxtA, markSensorTxtA, markHumidTile, markTempTile, markImageTile, this.keystore);
             } catch (Exception exc) {
                 Logger.getLogger(JavaFX.class.getName()).log(Level.SEVERE, null, exc);
                 System.out.println(exc);

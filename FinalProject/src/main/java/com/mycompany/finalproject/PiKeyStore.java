@@ -189,4 +189,8 @@ public class PiKeyStore {
 	public Enumeration<String> getAliases() throws KeyStoreException {
 		return this.ks.aliases();
 	}
+
+	public KeyStore getKeyStore() throws KeyStoreException{
+		return this.ks;
+	}
 }

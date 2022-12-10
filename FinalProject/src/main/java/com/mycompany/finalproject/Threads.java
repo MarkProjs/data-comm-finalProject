@@ -15,6 +15,10 @@ import org.json.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
 import java.awt.image.*;
 
 /**
@@ -28,6 +32,7 @@ public class Threads {
     private boolean running = true;
     private Random rand = new Random();
     private Date timeStamp;
+    private JSONObject data = new JSONObject();
     
     public void startDHTThread(Tile humidTile, Tile tempTile) {
         humidTile.setValue(0.0);
@@ -46,7 +51,7 @@ public class Threads {
                 } catch (InterruptedException e) {
                     System.err.println("DHT thread got interrupted. ");
                 }
-                if (count % 10 == 0) {
+                if (count % 5 == 0) {
                     int value = rand.nextInt(2);
                     if (value == 0) {
                         humidity += 0.2;
@@ -71,13 +76,13 @@ public class Threads {
             while(running) {
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                     
                 } catch(InterruptedException e) {
                     System.err.println("DoorBell thread got interrupted. ");
                 }
                 String text = "";
-                if(count % 25 == 0) {
+                if(count % 6 == 0) {
                     timeStamp = new Date();
                     text = "buzzer turned on at " + timeStamp.toString();            
                 }
@@ -99,7 +104,7 @@ public class Threads {
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
             
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
@@ -118,33 +123,53 @@ public class Threads {
         });        
         senseLEDThread.start();
     }
-    public void startPublishThread(MyMqtt mqtt, String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
+    public void startPublishThread(MyMqtt mqtt, String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile, PiKeyStore keystore) {
+        try {
+            String keyToSend = keystore.getPublicKeyAsString(keystore.getAliases().nextElement());
+            String alias = keystore.getAliases().nextElement();
+            var firstPub = new JSONObject();
+            firstPub.put("alias", alias).put("key", keyToSend);
+            mqtt.publish(topic, firstPub.toString());
+            System.out.println("key sent");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Thread publishThread = new Thread(()->{
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(10000);
+                    Thread.sleep(8000);
             
                 }catch(InterruptedException e) {
-                    System.err.println("SenseLED thread got interrupted. ");
+                    System.err.println("publish thread got interrupted. ");
                 }
 
                 try {
                     //get the image to convert to string
-                    File fi = new File("./FinalProject/src/main/resources/defaultImage/sunny-clip-art.png");
+                    File fi = new File("C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\main\\resources\\defaultImage\\sunny-clip-art.png");
                     try (FileInputStream fileInputReader = new FileInputStream(fi)) {
 											byte[] fileContent = new byte[(int)fi.length()];
 											fileInputReader.read(fileContent);
 											String imageString = Base64.getEncoder().encodeToString(fileContent);
 											//do the json stringified
-											String message = new JSONObject()
+                                            try {
+                                                String alias = keystore.getAliases().nextElement();
+											    String message = data
 											            .put("doorbell", doorbellTxtA.getText())
 											            .put("sensor", sensorTxtA.getText())
 											            .put("humidity", humidTile.getValue())
 											            .put("temperature", tempTile.getValue())
 											            .put("image", imageString)
+                                                        .put("alias", alias)
 											            .toString();
-											mqtt.publish(topic, message);
+                                                byte[] signature = keystore.generateSignature(message);
+                                                String signatureString = Base64.getEncoder().encodeToString(signature);
+                                                message += "|" + signatureString;
+											    mqtt.publish(topic, message);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}

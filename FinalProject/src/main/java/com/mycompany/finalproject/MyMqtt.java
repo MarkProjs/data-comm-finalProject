@@ -33,63 +33,66 @@ import java.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
 public class MyMqtt {
-    
+
     private String userName;
     private String passWord;
     private String messageText;
     final String host = "d851ff43cb294d18a69a6d253457ddce.s1.eu.hivemq.cloud";
+    private PiKeyStore keystore;
+
     // create an MQTT client
     final Mqtt5BlockingClient client = MqttClient.builder()
-                                        .useMqttVersion5()
-                                        .serverHost(this.host)
-                                        .serverPort(8883)
-                                        .sslWithDefaultConfig()
-                                        .buildBlocking();
-    
-    public MyMqtt(String userName,String passWord){
+            .useMqttVersion5()
+            .serverHost(this.host)
+            .serverPort(8883)
+            .sslWithDefaultConfig()
+            .buildBlocking();
+
+    public MyMqtt(String userName, String passWord) {
         this.userName = userName;
         this.passWord = passWord;
     }
-    
+
+    public void setKeyStore(PiKeyStore keystore) {
+        this.keystore = keystore;
+    }
+
     public Mqtt5BlockingClient getClient() {
         return client;
     }
-    
-    public static MyMqtt connectMqtt(){
-       Scanner reader = new Scanner(System.in);
-       boolean isTrue = true;
-       String userName = "";
-       String passWord = "";
-       while(isTrue) {
-           System.out.println("Enter your mqtt username: ");
-           userName = reader.nextLine();
-           System.out.println("Enter your mqtt password: ");
-           passWord = reader.nextLine();
-           try {
-               if(userName.length() > 30) {
-                   throw new IllegalArgumentException();
-               }
-               if(passWord.length() < 8 || passWord.length() > 30) {
-                   throw new IllegalArgumentException();
-               }
-               
-               isTrue = false;
+
+    public static MyMqtt connectMqtt() {
+        Scanner reader = new Scanner(System.in);
+        boolean isTrue = true;
+        String userName = "";
+        String passWord = "";
+        while (isTrue) {
+            System.out.println("Enter your mqtt username: ");
+            userName = reader.nextLine();
+            System.out.println("Enter your mqtt password: ");
+            passWord = reader.nextLine();
+            try {
+                if (userName.length() > 30) {
+                    throw new IllegalArgumentException();
+                }
+                if (passWord.length() < 8 || passWord.length() > 30) {
+                    throw new IllegalArgumentException();
+                }
+
+                isTrue = false;
+            } catch (Exception e) {
+                System.out.println("There was an error when trying log in. Try again");
+                isTrue = true;
             }
-           catch(Exception e) {
-               System.out.println("There was an error when trying log in. Try again");
-               isTrue = true;
-           }
         }
-       
-       MyMqtt mqtt = new MyMqtt(userName, passWord);
-       return mqtt;
+
+        MyMqtt mqtt = new MyMqtt(userName, passWord);
+        return mqtt;
     }
-    
+
     public void connectClient() {
-         // connect to HiveMQ Cloud with TLS and username/pw
+        // connect to HiveMQ Cloud with TLS and username/pw
         client.connectWith()
                 .simpleAuth()
                 .username(this.userName)
@@ -98,17 +101,17 @@ public class MyMqtt {
                 .send();
 
         System.out.println("Connected successfully");
-        
+
     }
-    
+
     public void subscribe(String topic) {
-       // subscribe to the topic "my/test/topic"
+        // subscribe to the topic "my/test/topic"
         client.subscribeWith()
                 .topicFilter(topic)
                 .qos(MqttQos.EXACTLY_ONCE)
-                .send(); 
+                .send();
     }
-    
+
     public void publish(String topic, String message) {
         // publish a message to the topic "my/test/topic"
         client.publishWith()
@@ -117,41 +120,69 @@ public class MyMqtt {
                 .qos(MqttQos.EXACTLY_ONCE)
                 .send();
     }
-    
-    public void getData(String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile, Tile imageTile) {
-        // set a callback that is called when a message is received (using the async API style)
-        client.toAsync().publishes(ALL, publish -> { 
+
+    public void getData(String topic, TextArea doorbellTxtA, TextArea sensorTxtA, Tile humidTile, Tile tempTile,
+            Tile imageTile) {
+        // set a callback that is called when a message is received (using the async API
+        // style)
+        client.toAsync().publishes(ALL, publish -> {
             if (topic.equals(publish.getTopic().toString())) {
                 messageText = UTF_8.decode(publish.getPayload().get()).toString();
                 try {
-                    JSONObject json = new JSONObject(messageText);
-                    // get the image
-                    byte[] decodeArray = Base64.getDecoder().decode(json.getString("image"));
-                    ByteArrayInputStream bis = new ByteArrayInputStream(decodeArray);
-                    BufferedImage bImage = ImageIO.read(bis);
-                    ImageIO.write(bImage, "png", new File("./FinalProject/src/main/resources/defaultImage/newImage.png"));
-                    //getting the values
-                    doorbellTxtA.setText(json.getString("doorbell"));
-                    sensorTxtA.setText(json.getString("sensor"));
-                    humidTile.setValue(json.getDouble("humidity"));
-                    tempTile.setValue(json.getDouble("temperature"));
-                    imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
-                } catch(IOException e){
+                    if (messageText.lastIndexOf('|') == -1) {
+                        JSONObject json = new JSONObject(messageText);
+                        if (json.has("key")) {
+                            var key = json.getString("key");
+                            var alias = json.getString("alias");
+                            if (!this.keystore.getKeyStore().containsAlias(alias)) {
+                                this.keystore.savePublicKey(alias, key);
+                                System.out.println("saved key");
+                            } else {
+                                System.out.println("already have this key");
+                            }
+                        }
+                    } else {
+                        System.out.println("data obj and not key");
+                        JSONObject json = new JSONObject(messageText);
+                        // get the image
+                        if (json.has("image") && !json.isNull("image")) {
+                            byte[] decodeArray = Base64.getDecoder().decode(json.getString("image"));
+                            ByteArrayInputStream bis = new ByteArrayInputStream(decodeArray);
+                            BufferedImage bImage = ImageIO.read(bis);
+                            ImageIO.write(bImage, "png",
+                                    new File("C:\\Users\\Jeremy\\OneDrive - Dawson College\\2022_fall_5\\data comm\\data-comm-final-project\\FinalProject\\src\\main\\resources\\defaultImage\\newImage.png"));
+                            imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
+                        }
+                        // getting the values
+                        if (json.has("doorbell")) {
+                            doorbellTxtA.setText(json.getString("doorbell"));
+                        }
+                        if (json.has("sensor")) {
+                            sensorTxtA.setText(json.getString("sensor"));
+                        }
+                        if (json.has("humidity")) {
+                            humidTile.setValue(json.getDouble("humidity"));
+                        }
+                        if (json.has("temperature")) {
+                            tempTile.setValue(json.getDouble("temperature"));
+                        }
+                    }
+                } catch (IOException e) {
                     System.out.println("Something is wrong in the ImageIO.read method");
-                } 
+                } catch (Exception e) {
+                    System.out.println("Something else other than ImageIO is wrong");
+                }
             }
-        });    
+        });
     }
 
     public String getMessageText() {
         return messageText;
     }
 
-
-    
     public void disconnect() {
         // disconnect the client after a message was received
         client.disconnect();
     }
-    
+
 }
