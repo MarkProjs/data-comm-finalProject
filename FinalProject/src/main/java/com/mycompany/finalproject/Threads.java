@@ -53,8 +53,8 @@ public class Threads {
                         temperature += 0.1;
                     }
                     else {
-                        humidity -= 0.2;
-                        temperature -= 0.1;
+                        humidity -= 0.1;
+                        temperature -= 0.3;
                     }
                     humidTile.setValue(humidity);
                     tempTile.setValue(temperature);
@@ -71,7 +71,7 @@ public class Threads {
             while(running) {
                 try {
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                     
                 } catch(InterruptedException e) {
                     System.err.println("DoorBell thread got interrupted. ");
@@ -99,7 +99,7 @@ public class Threads {
             while(running) {
                 try{
                     //Delay thread for 2 seconds
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
             
                 }catch(InterruptedException e) {
                     System.err.println("SenseLED thread got interrupted. ");
@@ -126,7 +126,7 @@ public class Threads {
                     Thread.sleep(10000);
             
                 }catch(InterruptedException e) {
-                    System.err.println("SenseLED thread got interrupted. ");
+                    System.err.println("SenseLED thread got interrupted.");
                 }
 
                 try {

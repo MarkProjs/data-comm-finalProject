@@ -135,10 +135,13 @@ public class MyMqtt {
                     sensorTxtA.setText(json.getString("sensor"));
                     humidTile.setValue(json.getDouble("humidity"));
                     tempTile.setValue(json.getDouble("temperature"));
+                    Thread.sleep(500);
                     imageTile.setImage(new Image(getClass().getResourceAsStream("/defaultImage/newImage.png")));
                 } catch(IOException e){
                     System.out.println("Something is wrong in the ImageIO.read method");
-                } 
+                } catch (InterruptedException e) {
+                    System.out.println("Thread sleep interrupted");
+                }
             }
         });    
     }
