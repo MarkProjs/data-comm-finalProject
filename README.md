@@ -8,7 +8,7 @@
 ![image-4.png](./image-4.png)
 ## Notice
 - Since we are using mock data some classes are not needed(classes not needed: Camera and CameraApp, ProccessBulder, Application, ProccessCode, and Component)
-## Before runnig the project:
+## Before running the project:
 1. If path in line 132 of MyMqtt.java does not work properly, change it to an absolute path until it reaches defaultImage/newImage.png
 2. If path in line 134 of Threads.java does not work properly, change it to an absolute path until it reaches defaultImage/sunny-clip-art.png
 
